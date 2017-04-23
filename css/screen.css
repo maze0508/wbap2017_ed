@@ -1,0 +1,13 @@
+/**********************************
+
+Use: Main Screen Import
+
+***********************************/
+
+
+@import "cmxformTemplate.css";
+@import "cmxform.css";.loginbody center .cmxform p label {
+	background-image: url(background-image:%20 url(../images/login1.png);
+); }
+.loginbody center .cmxform p label {
+}
