@@ -30,16 +30,14 @@ a:hover{color:#F4AB25;background-color: #FFECD9;text-decoration: none;}
 </head>
 <body>
 <div id="logo">
-    <?php
-	include_once("banner.php");
-    include_once("php/root.php");
-	?>
-	<h2>歡迎光臨_<span id="ald"><?php echo $_SESSION['user_name'];?></span>
 	<?php
-	if($_SESSION['account'])
-	echo '<a id="logout" href="php/logout.php">，登出</a>';
+	if($_SESSION['account']){
+		include_once("banner.php");
+		include_once("php/root.php");
+	}else{
+		echo "<h2><input type='button' class='colorbox' style='background-image: url(images/login_btn.jpg);width:90px; height:30px;'/></h2>";
+	}
 	?>	
-	</h2>
 </div>
 <!----<div id="menu">
 

@@ -42,13 +42,12 @@ width:60px;height:60px;float:left;border:1px solid #360;margin:3px;text-align:ce
 <body>
 <div id="logo">
 	<?php
-	include_once("banner.php");
-	?>
-	<h2>歡迎光臨_<span id="ald"><?php echo $_SESSION['user_name'];?></span>
-	<?php
-	include_once("php/root.php");
-	if($_SESSION['account'])
-	echo '<a id="logout" href="php/logout.php">，登出</a>';
+	if($_SESSION['account']){
+		include_once("banner.php");
+		include_once("php/root.php");
+	}else{
+		echo "<h2><input type='button' class='colorbox' style='background-image: url(images/login_btn.jpg);width:90px; height:30px;'/></h2>";
+	}
 	?>	
 	</h2>
 </div>

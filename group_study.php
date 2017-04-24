@@ -1,7 +1,9 @@
 <?php session_start();
 $member_id = $_SESSION['member_id'];
-if(!$_SESSION['account'])
+if(!$_SESSION['account']){
+echo "<script>alert('請先登入帳號');</script>";
 echo "<script>document.location.href='index.php'</script>";
+}
 ?>
 <!---<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">---->
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -70,16 +72,13 @@ width:300px;}
 <body >
 <div id="logo">
 	<?php
-	include_once("banner1_1.php");
-	?>	
-	<h2>歡迎光臨_<span id="ald"><?php echo $_SESSION['user_name'];?></span>
-	<?php
+	if($_SESSION['account']){
+	include_once("banner_stu.php");
 	include_once("php/root.php");
-	
-	if($_SESSION['account'])
-	include_once("banner_logout.php");//登出按鈕
+	}else{
+		echo "<h2><input type='button' class='colorbox' style='background-image: url(images/login_btn.jpg);width:90px; height:30px;'/></h2>";
+	}
 	?>	
-	</h2>
 </div>
 <!-- start page -->
 <div id="page" style="height:500px; background-repeat:no-repeat;
@@ -88,12 +87,12 @@ width:300px;}
 	<!-- start content -->
 	<div id="content" style="width:100%">
         <div class="Tit"><img src="images/test/pic-Tit.png"/>
-            <a href="index.php" title="個人書房">個人書房</a> >> <a href="#" title="小組學習主題">小組學習主題</a></div><br/><br/>
+            <a href="index.php" title="個人書房">個人書房</a> >> <a href="#" title="我的學習主題">我的學習主題</a></div><br/><br/>
 		<div class="post">
 			<div class="entry" >
 			<br/>
 			<br/>
-			<img  style="width:450px; " src="images/group_learn_theme.png"/>
+			<img  style="width:450px; " src="images/stu-mytheme.png"/>
 				<!-- <label style="color:red">【小組共同學習主題】</label> -->
 				<br/>
 				<?php

@@ -33,24 +33,29 @@ height:400px;
 #Edit{
 	height:700px
 }
+
 </style>
 </head>
 
 <body>
 	<div id='logo'>
-	<?php include_once('banner1_1.php');
-	echo "<h2>歡迎光臨_<span id='ald'>".$_SESSION['user_name']."</span>";
-	include_once('php/root.php');
-	if($_SESSION['account'])
-	echo "<a id='logout' href='php/logout.php'>，登出</a>	</h2></div>
-	";
+	<?php
+	if($_SESSION['account']){
+		include_once("banner_stu.php");
+		include_once("php/root.php");
+	}else{
+		echo "<h2><input type='button' class='colorbox' style='background-image: url(images/login_btn.jpg);width:90px; height:30px;'/></h2>";
+	}
 	?>';
 <!-- start page -->
-<div id='page'>
-    <div id='content' style='width:100%'>
+<div id="page" style="height:500px; background-repeat:no-repeat;
+	background-position:right bottom;background-size:26%;background-image: url(images/test/favbk.png);">
+
+  <div id='content'>
         <div class='Tit'><img src='images/test/pic-Tit.png'/>
-            <a href='index.php' title='個人書房'>個人書房</a> >> <a href='#' title='筆記本'>筆記本</a></div><br/><br/></div>
-	
+            <a href='index.php' title='個人書房'>個人書房</a> >> <a href='#' title='筆記本'>筆記本</a>
+         </div><br/><br/>
+
 	<div id='compos_book'>
 		<?php
 		echo "<select id='compos_book_select'> <option value='change'>請選擇章節</option>";
@@ -67,9 +72,9 @@ height:400px;
 	</div>
 	<div id='show_book'>
 	</div>
-</div>		
 </div>
-<!-- end page -->
+</div>
+<!-- end page -->	
 
 <div id="footer">
 	

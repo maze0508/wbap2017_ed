@@ -189,32 +189,6 @@ ul#menu2 {
 
 }
 
-/* Search */
-
-#search {
-	float: right;
-	width: 227px;
-}
-
-#search fieldset {
-	border: none;
-}
-
-#search input {
-	float: left;
-}
-
-#search #s {
-	width: 136px;
-	margin-right: 7px;
-	padding: 2px 5px;
-}
-
-#search #x {
-	background: none;
-	border: none;
-}
-
 /* Banner */
 
 #banner {
@@ -227,10 +201,10 @@ ul#menu2 {
 
 #page {
 	width: 900px;
-	height: 600px;
+	height: 900px;
 	background-color: #FFFFFF;
 	margin: 0 auto 0 auto;
-	padding: 45px 35px 45px 25px;
+	padding: 45px 25px 0 25px;
 	
 	/*background-color: #FFF;*/	
 	
@@ -241,17 +215,19 @@ ul#menu2 {
 
 #content {
 	float: left;
-	width: 603px;
+	width: 900px;
 	background-color: #FFFFFF;
-	margin: 0 0 40px 30px;
+	margin: 0 30 0 30px;
+	height: 900px;
 	
 }
 #content .Tit {
-	font-family:微軟正黑體;
-	float:left;
-	font-size:17px;
-	font-weight:bold;
-	color:#777777;
+	font-family: 微軟正黑體;
+	float: left;
+	font-size: 17px;
+	font-weight: bold;
+	color: #777777;
+	text-decoration: none;
 }
 #content .Tit  img{
 	width: 20px;
@@ -259,7 +235,7 @@ ul#menu2 {
 
 #contentC {
 	float: right;
-	width: 603px;
+	width: 900px;
 }
 
 #contentC .Note{
@@ -305,8 +281,8 @@ ul#menu2 {
 #contentR {
 	margin:0;
 	float: left;
-	width: 960px;
-	min-height: 400px;
+	width: 900px;
+	min-height: 900px;
 	overflow:hidden;
 	background-repeat:no-repeat;
 	background-position:right bottom;
@@ -316,6 +292,8 @@ ul#menu2 {
 	
 }
 .post {
+	width: 900px;
+	min-height: 900px;
 }
 
 .post .title {

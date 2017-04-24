@@ -31,16 +31,13 @@ a{text-decoration:none};
 <body>
 <div id="logo">
 	<?php
-	if($_SESSION['account'])
-	include_once("banner.php");
-	?>
-	<h2>歡迎光臨_<span id="ald"><?php echo $_SESSION['user_name'];?></span>
-	<?php
-	include_once("php/root.php");
-	if($_SESSION['account'])
-	echo '<a id="logout" href="php/logout.php">，登出</a>';
+	if($_SESSION['account']){
+		include_once("banner.php");
+		include_once("php/root.php");
+	}else{
+		echo "<h2><input type='button' class='colorbox' style='background-image: url(images/login_btn.jpg);width:90px; height:30px;'/></h2>";
+	}
 	?>	
-	</h2>
 </div>
 
 <!-- start page -->
@@ -49,47 +46,7 @@ a{text-decoration:none};
 	<div id="content" style="margin: 20px 0 3% 10%;">
 		<div class="post">
 		<?php
-		if($_SESSION['account']){
-			if($_SESSION['compet']==1){
-				echo "<script>document.location.href='group_study.php'</script>";
-				/*echo '
-				<table width="100%">
-					<tr align="center">
-						<td width="25%"><div style="width:130px"><a href="start_learning_0.php"><img src="images/start128.png">開始學習</a></div></td>
-						<td width="25%"><div style="width:130px"></div></td>
-						<td width="25%"><div style="width:130px"></div></td>				
-						<td width="25%"><div style="width:130px"></div></td>
-					</tr>
-				</table>';*/
-			}
-			if($_SESSION['compet']==2){ //老師權限
-				echo '<table class="sign" cellspacing="5">';
-				
-				echo '<tr align="center" >
-						<td class="title" style="background-color:#fffab3;"><div>學<br/>習<br/>區</div></td>
-						<td class="function" style="background-color:#fffbcd;"><div ><a href="manager_learning_list.php"><img src="images/test/tr-study.png"/><br/>管理學習</a></div></td>
-						<td class="function" style="background-color:#ebf4d0;"><div></div></td>
-						<td class="function" style="background-color:#fffbcd;"><div ></div></td>				
-						<td class="function" style="background-color:#fffbcd;"><div ></div></td>
-					</tr>';
-				echo '<tr align="center">
-						<td class="title" style="background-color:#f2dbe9;"><div>教<br/>材<br/>區</div></td>
-						<td class="function" style="background-color:#f3e4ef;"><div><a href="my_books.php"><img src="images/test/tr-myvideo.png"><br/>我的教材</a></div></td>
-						<td class="function" style="background-color:#f3e4ef;"><div><a href="team.php"><img src="images/test/tr-group.png"><br/>課堂分組</a></div></td>
-						<td class="function" style="background-color:#f3e4ef;"><div><a href="my_learning_list.php"><img src="images/test/tr-manth.png"><br/>管理主題 / 分組關聯</a></div></td>
-						<td class="function" style="background-color:#f3e4ef;"><div><a href="books_list.php"><img src="images/test/adm-vanalysis.png"/><br/>教材資源</a></div></td>
-					</tr>';
-				echo '<tr align="center">
-						<td class="title" style="background-color:#dfd7e9;"><div>影<br/>片<br/>區</div></td>
-						<td class="function" style="background-color:#dfe0ef;"><div ><a href="upload_media.php"><img src="images/test/tr-addvideo.png"><br/>新增影片</a></div></td>
-						<td class="function" style="background-color:#dfe0ef;"><div ><a href="temp_media.php"><img src="images/test/tr-skvideo.png"><br/>影片草稿夾</a></div></td>
-						<td class="function" style="background-color:#dfe0ef;"><div ><a href="my_media.php"><img src="images/test/tr-shvideo.png"><br/>已分享影片</a></div></td>				
-						<td class="function" style="background-color:#dfe0ef;"><div ><a href="my_favorite.php"><img src="images/test/tr-fav.png"><br/>我的收藏</a></div></td>
-					 </tr>';
-				
-				echo '</table>';
-			}
-			if($_SESSION['compet']==3){ //管理員
+		if($_SESSION['account'] && $_SESSION['compet']==3){ //管理員
 				echo '<table class="sign" cellspacing="5">';
 				echo '<tr align="center">
 						<td class="title" style="background-color:#ddf0d6;"><div>學<br/>習<br/>管<br/>理</div></td>
@@ -121,7 +78,7 @@ a{text-decoration:none};
 					</tr>';
 				
 				echo '</table>';	
-			}
+			
 		}else{
 			echo "此功能區必須登入才會開放";
 		}

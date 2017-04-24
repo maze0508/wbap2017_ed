@@ -15,10 +15,10 @@
 	$sTable = "member";
 	
 	/* Database connection information */
-	$gaSql['user']       = "root";
-	$gaSql['password']   = "CSCE521";
-	$gaSql['db']         = "wba2012";
-	$gaSql['server']     = "localhost";
+	$gaSql['user']       = "maze";
+	$gaSql['password']   = "faIRhg5uLF";
+	$gaSql['db']         = "wbap2017";
+	$gaSql['server']     = "120.110.114.90";
 
 	
 	/* REMOVE THIS LINE (it just includes my SQL connection user/pass) */

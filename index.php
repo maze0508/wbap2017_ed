@@ -43,17 +43,16 @@ img {
 	<?php
 	if($_SESSION['compet']==2 || $_SESSION['compet']==3){
 		include_once("banner.php");
-	}else{
+	}else if($_SESSION['compet']==1) {
 		include_once("banner_stu.php");
-	}
-	include_once("php/root.php");
-	echo"<div id='login'>";
-	if($_SESSION['account']){
-		echo "<h2>歡迎光臨_<span id='ald'>".$_SESSION['user_name']."</span>	<a id='logout' href='php/logout.php'>，登出</a></h2>";
 	}else{
+		echo "<ul id='logo1'>
+		<li class='first'><a href='index.php' accesskey='1' title=''><img title='回首頁' src='images/logo1.png'/></a></li>
+	</ul>";
 		echo "<h2><input type='button' class='colorbox' style='background-image: url(images/login_btn.jpg);width:90px; height:30px;'/></h2>";
 	}
-	echo "</div>";
+	
+	include_once("php/root.php");
 	?>
 	
 </div>
@@ -61,14 +60,7 @@ img {
 <div id="page"  >
 	<!-- start content -->
 	<div id="contentI"  >
-		<div id="search">
-			<!----<form method="get" action="">---->
-				<fieldset>
-				<input id="search_key" type="text" name="s" value="" />
-				<input id="search_b" type="image" name="imageField" src="images/img10.jpg" />
-				</fieldset>
-			<!----</form>--->
-		</div>
+
 		<div id="media" >
 		<?php
 			$query="select subject_id,subject_catalog FROM subject ORDER BY subject_id";
@@ -129,33 +121,12 @@ img {
 <script type="text/javascript" src="js/jquery.jeditable.min.js"></script>
 <script type="text/javascript" src="js/menu.js"></script>
 <script type="text/javascript">
-var member_id = "<?php print $_SESSION['member_id']; ?>";
+var member_id = "<?php print $member_id; ?>";
 $(function(){  
 	$('.colorbox').live("click",function(){
 		$(this).colorbox({href:"index2.php",width:"600", height:"500",iframe:true,slideshow:true});
 	})
-	
-	$("div.go_subject").live("click",function(){
-		var subject_id=$(this).attr("id");
-		var subject_name=$(this).text();
-		$.post("php/subject_go.php",{subject_name:subject_name,subject_id:subject_id},function(data) {$("#contentI").html(data);});
-	})
-	$("div.go_subject").live({
-		mouseenter:
-			function(){
-				$(this).parents('tr').find('img').attr('src','images/test/class-green.png');
-				$(this).parents('div.Class').css('background-color','#dcedc9');
-				},
-		mouseleave:
-			function(){
-				$(this).parents('tr').find('img').attr('src','images/test/class-pink.png');
-				$(this).parents('div.Class').css('background-color','#ffffff');
-				}
-	});
-	$("#search_b").live("click",function(){
-		var search_key = $('#search_key').val();
-		$.post("php/seartch.php",{search_key:search_key},function(data) {$("#media").html(data);});
-	})
+
 })
 </script>
 </body>

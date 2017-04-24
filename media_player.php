@@ -40,16 +40,14 @@ a:hover{color:#F4AB25;background-color: #FFECD9;text-decoration: none;}
 </head>
 <body>
 <div id="logo">
-    <?php
-	include_once("banner.php");
-	?>
-	<h2>歡迎光臨_<span id="ald"><?php echo $_SESSION['user_name'];?></span>
 	<?php
-	include_once("php/root.php");
-	if($_SESSION['account'])
-	echo '<a id="logout" href="php/logout.php">，登出</a>';
+	if($_SESSION['account']){
+		include_once("banner.php");
+		include_once("php/root.php");
+	}else{
+		echo "<h2><input type='button' class='colorbox' style='background-image: url(images/login_btn.jpg);width:90px; height:30px;'/></h2>";
+	}
 	?>	
-	</h2>
 </div>
 <!----<div id="menu">
 
@@ -161,12 +159,7 @@ a:hover{color:#F4AB25;background-color: #FFECD9;text-decoration: none;}
 				if($_SESSION['compet']>1)
 					echo "<a href='fav_books.php?user_media_id=$user_media_id' class='ibutton' style='background-color:#969'><img src='images/book16.png' align='top' />教材製作</a>";
 				?>	
-				<div style='margin-top:5px'> 
-				<span type="text" id="anchor_time">0</span>
-				<input type="text" id="anchor_descript"  size="50" maxlength="50" value=" 請將影片暫停在您欲註記的時間點.." />
-				<label id="anchor" class='ibutton' style='background-color:#F60'>留下註記</label>
-                
-				</div>
+
 			</div>
 		</div>
 	</div>
@@ -223,20 +216,6 @@ $.post("php/favorite_add.php",{member_id:member_id,user_media_id:user_media_id},
 alert("請先登入");
 })
 
-$("#anchor").click(function(){
-if(member_id.length>=1){
-$.post("php/insert_anchor.php",{member_id:member_id,user_media_id:user_media_id,anchor_descript:$("#anchor_descript").val(),anchor_time:$("#anchor_time").text()},function(data) {
-($.browser.msie)?thisMovie('player').sendEvent('play','true'):thisMovie('player2').sendEvent('play','true')
-alert('已留下註記!!'); $("#comment").html(data); $("#anchor_descript").val('')
-});
-}else
-alert("請先登入");
-})
-
-$("#anchor_descript").click(function(){($.browser.msie)?thisMovie('player').sendEvent('play','false'):thisMovie('player2').sendEvent('play','false')}).one("click",function(){
-$(this).val("")
-})
-
 $("#bkbutton").click(function(){
 location.href='./my_favorite.php'; 
 })
@@ -271,10 +250,6 @@ function playerReady(obj) {($.browser.msie)?thisMovie('player').addModelListener
 function thisMovie(movieName) {if(navigator.appName.indexOf("Microsoft") != -1){return window[movieName];} else {return document[movieName];}};
 
 
-function show(obj){
-$("#anchor_time").text(Math.floor(obj.position));
-$("div."+Math.floor(obj.position)).siblings('div.antime').css("background-color","").end().css("background-color","#FC9");
-}
 </script>
 </body>
 </html>
