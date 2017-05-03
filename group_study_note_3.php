@@ -57,6 +57,9 @@ color:#FFF
 	top: 0px;
 	right: 0px;
 }
+#note label{
+	color:#69C;	
+}
 </style>
 </head>
 <body>
@@ -156,11 +159,11 @@ color:#FFF
 				        <video id="MovieShow" preload="auto" controls width="800px" height="600px" playsinline webkit-playsinline="false" allowfullscreen="false">
 				    <?php
 				        if(strstr($media_type,"mp4"))
-				            echo "<source src=\"../user_movie/".$url.".mp4\" type = 'video/mp4'>";
+				            echo "<source src=\"user_movie/".$url.".mp4\" type = 'video/mp4'>";
 				        else if(strstr($media_type,"ogg"))
-				            echo "<source src=\"../user_movie/".$url.".ogv\" type = 'video/ogg'>";
+				            echo "<source src=\"user_movie/".$url.".ogv\" type = 'video/ogg'>";
 				        else if(strstr($media_type,"webm"))
-				            echo "<source src=\"../user_movie/".$url.".webm\" type = 'video/webm'>";
+				            echo "<source src=\"user_movie/".$url.".webm\" type = 'video/webm'>";
 						if($anchor_time){
 					?>
 							 <script>
@@ -176,11 +179,18 @@ color:#FFF
 				    <?php
 						}
                     ?>   
-           </div>
-				</div>
-				<span type="text" id="anchor_time">0</span>
-				<input type="text" id="anchor_descript"  size="50" maxlength="200" value=" 請將影片暫停在您欲註記的時間點.." />
-				<label id="anchor" class='ibutton' style='background-color:#F60'>留下註記</label>
+           </div> 
+          <!-- 留下註記start -->
+            <div id="note"> 
+                <input type="hidden" id="anchor_time" value="" /> 
+                <label>● 註記內容：</label>           
+                <textarea cols="10" id="anchor_descript" style="width:100%;height:100px">請輸入您欲註記的內容..</textarea><br/>
+                <button id="anchor" style='border-bottom: hidden; background-color: #95CFF2; color: #FFF; width: 100%;'>留下註記</button>
+            </div>    
+                  
+            <!-- 留下註記end -->
+			</div>
+
 			<div style="float:right;width:120px">
 				<a style='text-decoration: none;' href='start_learning_class_2.php?user_media_id=<?php print $user_media_id; ?>&team_id=<?php print $team_id; ?>'><img src="images/test/stu-cf3.png" /><!-- 整理註記 --></a>
            </div>
@@ -194,42 +204,59 @@ color:#FFF
 	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
 			<h3>我的註記</h3>
 	<?php
-		$query="SELECT member.name, media_anchor_image.media_anchor_image_id, media_anchor_image.anchor_descript, media_anchor_image.noteColor, media_anchor_image.anchor_time, media_anchor_image.image
+	   $query="SELECT member.name, media_anchor_image.media_anchor_image_id, media_anchor_image.anchor_descript, media_anchor_image.noteColor, media_anchor_image.anchor_time, media_anchor_image.image
 				FROM member
 				LEFT JOIN media_anchor_image ON member.member_id =  media_anchor_image.member_id
 				WHERE user_media_id = '$user_media_id'
 				AND media_anchor_image.member_id = '$member_id'  
-				ORDER BY media_anchor_image.anchor_time
-			";
-			$result = $mysqli->query($query);
-		while($row = $result->fetch_array(MYSQL_ASSOC)){
-			$name = $row['name'];
-			$anchor_time = $row['anchor_time'];
-			$image = $row['image'];
-			$anchor_descript = $row['anchor_descript'];//文字
-			$media_anchor_image_id = $row['media_anchor_image_id'];//文字
-			$noteColor = $row['noteColor'];
-			
-			$s   =   $anchor_time%60;
-			$m   =   floor($anchor_time/60);
-			//$o   =   floor($m/60);
-			$m = ($m < 10)?"0".$m:$m;
-			$s = ($s < 10)?"0".$s:$s;
-			
+				ORDER BY media_anchor_image.anchor_time";
+				
+				$result = $mysqli->query($query);
+				$row = $result->fetch_array(MYSQL_ASSOC);
+			/*檢查此學習主題是否為空*/
+			if(empty($row)){
+				echo "<p>此學習主題目前尚無註記</p>";
+			}else{
+
+				while($row) { 
+					$name = $row['name'];
+					$anchor_time = $row['anchor_time'];
+					$image = $row['image'];
+					$anchor_descript = $row['anchor_descript'];//文字
+					$media_anchor_image_id = $row['media_anchor_image_id'];//文字
+					$noteColor = $row['noteColor'];
+					$h   =   floor($anchor_time/3600);
+					$temp = $anchor_time%3600;
+					$m   =   floor($temp/60);
+					$temp = $temp%60;
+					$s   =  $temp;
+					
+					$h = ($h < 10)?"0".$h:$h;
+					$m = ($m < 10)?"0".$m:$m;
+					$s = ($s < 10)?"0".$s:$s;
+					
 			if($noteColor==0){
-				echo "<table id='$media_anchor_image_id' style='border-top:1px solid;cursor:pointer'>
-						<tr>
-							<td style='width:150px;'><div id='$anchor_time' class='antime $anchor_time' >[$m:$s] $name 說：<br><br> $anchor_descript</div>
-							</td>
-							<td style='width:50px;'>
-								<div><img class='delete_button' style='width:16px;'src='images/cancel.png';></img></div> 
-								<div><img class='edit_button' style='width:16px;'src='images/tag_blue_add.png';></img></div>
-							</td>
-						</tr>
-						</table>
-					";
-			}
+					//Youtube影片的註記內容，因為無法截圖，故不顯示圖片	
+   					  if($title && $found){
+						  echo "<li id='$media_anchor_image_id'>
+							<div><a style='text-decoration: none;' href='group_study_note_3.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'>
+							<div id='$anchor_time' class='antime $anchor_time' >註記時間：[$h:$m:$s]</div><div>註記內容：$anchor_descript</div></a>
+							<div><img class='delete_button' style='width:16px;'src='images/cancel.png';></img></div></div>
+						</li>";
+					  }else{
+						echo "<li id='$media_anchor_image_id'>
+							<div>
+							<a style='text-decoration: none;height:80%;' href='group_study_note_3.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'>
+							<div id='$anchor_time' class='antime $anchor_time' style='font-size:12pt;'>註記時間：[$h:$m:$s]</div><br/>
+							<div id='$anchor_descript' style='font-size:12pt;'>註記內容：$anchor_descript</div><br/>
+							<div><img class='image' style='width:60%;height:60%;' src='images/anchor/$image'/></div></a></div>
+							<div><img class='delete_button' style='width:16px;'src='images/cancel.png';></img></div> 
+							<div><img class='edit_button' style='width:16px;'src='images/tag_blue_add.png';></img></div>
+							</li>";
+					}}
+					$row = $result->fetch_array(MYSQL_ASSOC);
 		}
+	}
 		
 	?>
 		</nav>
@@ -270,6 +297,64 @@ var title = "<?php print $title; ?>";
 var url = "<?php print $url; ?>";
 var media_type = "<?php print $media_type; ?>";
 var edit_media_image_id;
+
+function record(member_id,action){
+	$.post("php/record.php",{member_id:member_id,action:action},function(data) {	
+		 });
+};
+
+$(document).ready(function(){
+  $("#anchor").click(function(){
+	if(member_id.length>=1){
+		/*如果是html播放器，以下紀錄目前時間*/
+		if (document.getElementById("MovieShow")) {
+			 Media = document.video = document.getElementById("MovieShow");
+			 $("#anchor_time").val(Math.floor(Media.currentTime));
+		}
+		/*按下留下註記按鈕以新增註記*/
+		$.post("php/insert_anchor_image_text.php",{member_id:member_id,user_media_id:user_media_id,url:url,media_type:media_type,anchor_descript:$("#anchor_descript").val(),anchor_time:$("#anchor_time").val(),privacy:"privacy"},
+		function(data) {
+			alert("已新增註記，重新整理以查看註記內容");
+			action='新增圖文註記'+$("#anchor_descript").val();
+			record(member_id,action);
+			$("#anchor_descript").html(data); 
+			$("#anchor_descript").val(' '); 
+			$("#anchor_time").val(' ');
+		});
+	}else{
+		alert("請先登入");
+	}
+ });
+});
+
+$(function(){  
+$(".delete_button").click(function(){
+	if(member_id.length>=1){
+		//var button_type="image";
+		var media_anchor_image_id=$(this).parents('li').attr('id');
+		//alert(media_anchor_id);
+		$.post("php/delete_anchor_text.php",{media_anchor_image_id:media_anchor_image_id},function(data) {
+			var del_anchor="'li #"+media_anchor_image_id+"'";
+			alert("已刪除註記，重新整理以查看註記內容");
+			action='刪除圖片註記';
+			record(member_id,action);
+			$(del_anchor).remove(); 
+ 
+		});
+	}else{
+		alert("請先登入");}
+	});
+});
+
+$('.edit_button').click(function(){
+	if(member_id.length>=1){
+		var edit_anchor_image_id=$(this).parents('li').attr('id');
+		action='編輯圖片註記';
+		record(member_id,action);
+		$(this).colorbox({href:"crop_1.php?media_anchor_image_id="+edit_media_image_id+"",width:"600", height:"500",iframe:true,slideshow:true});
+	}
+})
+
 $(function(){  
 $('#down').toggle(
 function(){
@@ -280,21 +365,6 @@ function(){
 	$(this).attr('src','images/down32.png').parent().css({'height':'20px'});
 	return false;
 })
-
-
-
-
-$("#anchor").click(function(){
-if(member_id.length>=1){
-$.post("php/insert_anchor_image_text.php",{member_id:member_id,user_media_id:user_media_id,url:url,anchor_descript:$("#anchor_descript").val(),anchor_time:$("#anchor_time",media_type:media_type).text(),privacy:"privacy"},function(data) {
-action='新增圖文註記'+$("#anchor_descript").val();;
-record(member_id,action);
-alert('已留下註記!!'); $("#comment").html(data); $("#anchor_descript").val('')
-});
-}else
-alert("請先登入");
-})
-
 
 
 $('body').keydown(function(){
@@ -317,30 +387,6 @@ $("#anchor_descript").click(function(){($.browser.msie)?thisMovie('player').send
 $(this).val("");
 })
 
-
-$(".delete_button").live("click",function(){
-	//alert("ok");
-	if(member_id.length>=1){
-		//var button_type="image";
-		var media_anchor_id=$(this).parents('table').attr('id');
-		//alert(media_anchor_id);
-		//$.post("php/delete_anchor.php",{button_type:button_type,media_anchor_id:media_anchor_id,button:"delete"},function(data) {
-		$.post("php/delete_anchor_text.php",{media_anchor_id:media_anchor_id,button:"delete"},function(data) {
-			var del_anchor="table#"+media_anchor_id;
-			action='刪除圖片註記';
-			record(member_id,action);
-			 $(del_anchor).remove();  
-		});
-	}else
-	alert("請先登入");
-})
-
-$('.edit_button').live("mouseover",function(){
-	action='編輯圖片註記';
-	record(member_id,action);
-	edit_media_image_id=$(this).parents('table').attr('id');
-	$(this).colorbox({href:"crop_1.php?media_anchor_image_id="+edit_media_image_id+"",width:"600", height:"500",iframe:true,slideshow:true});
-})
 $(document).bind('cbox_closed', function(){
 		$.post("php/insert_anchor_image_text.php",{member_id:member_id,user_media_id:user_media_id,privacy:"privacy"},
 			function(data) {//alert(data);
@@ -377,13 +423,6 @@ function show(obj){
 	$("div.antime").parents('table').css("background-color","");
 	$('#sidebar').scrollTop();
 	$("div."+Math.floor(obj.position)).parents('table').css("background-color","#FC9");
-//$("#anchor_time").text(Math.floor(obj.position));
-//$("div."+Math.floor(obj.position)).siblings('div.antime').css("background-color","").end().css("background-color","#FC9");
-}
-
-function record(member_id,action){
-	$.post("php/record.php",{member_id:member_id,action:action},function(data) {
-	});
 }
 
 </script>

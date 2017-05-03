@@ -70,6 +70,7 @@ a {
 .cbp-spmenu {
 	background: #47a3da;
 	position: fixed;
+	padding-bottom:10%;
 }
 
 .cbp-spmenu a {
@@ -92,7 +93,7 @@ a {
 
 .cbp-spmenu-horizontal {
 	width: 100%;
-	height: 30%;
+	height: 50%;
 	left: 0;
 	z-index: 1000;
 	overflow: hidden;
@@ -128,11 +129,11 @@ a {
 
 	.cbp-spmenu-horizontal {
 		font-size: 75%;
-		height: 35%;
+		height: 60%;
 	}
 
 	.cbp-spmenu-bottom {
-		bottom: -35%;
+		bottom: -60%;
 	}
 
 }
