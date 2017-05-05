@@ -1,7 +1,7 @@
 <?php
 session_start();
 $member_id = $_SESSION['member_id'];
-include_once("../php/root.php");
+include_once("php/root.php");
 $user_media_id = $_POST['user_media_id'];
 
 $query="SELECT member.name, media_anchor_image.media_anchor_image_id, media_anchor_image.anchor_descript, media_anchor_image.noteColor, media_anchor_image.anchor_time, media_anchor_image.image
@@ -36,19 +36,21 @@ if(empty($row)){
 							if($noteColor==0){
 							//Youtube影片的註記內容，因為無法截圖，故不顯示圖片	
 							  if($title && $found){
-								  echo "<li id='$media_anchor_image_id'>
-									<div style='width:50%;color:#69C;'><a style='text-decoration: none;' href='../m/start_learning_1.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'><div id='$anchor_time' class='antime $anchor_time' >註記時間：[$h:$m:$s]</div><div>註記內容：$anchor_descript</div></a>
-									<div><img class='delete_button' style='width:16px;'src='../images/cancel.png';></img></div></div>
-								</li>";
+								  echo "<ul><li id='$media_anchor_image_id'>
+									<div style='width:50%;color:#69C;'><a style='text-decoration: none;' href='start_learning_1.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'><div id='$anchor_time' class='antime $anchor_time' >註記時間：[$h:$m:$s]</div><div>註記內容：$anchor_descript</div></a>
+									<button id='$media_anchor_image_id' class='delete_button' style='background-image:url(../images/cancel.png);width:15px;height:15px;' onclick='delete_button(this)'> </button>
+</div>
+								</li></ul>";
 							  }else{
-								echo "<li id='$media_anchor_image_id'>
-									<div style='width:90%;height:80%;color:#69C;float:left;padding-bottom:10%;'>
-									<a style='text-decoration: none;height:80%;' href='../m/start_learning_1.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'>
+								echo "<ul><li id='$media_anchor_image_id'>
+									<div>
+									<a style='text-decoration: none;height:80%;' href='group_study_note_3.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'>
 									<div id='$anchor_time' class='antime $anchor_time' style='font-size:12pt;'>註記時間：[$h:$m:$s]</div><br/>
 									<div id='$anchor_descript' style='font-size:12pt;'>註記內容：$anchor_descript</div><br/>
-									<div><img class='image' style='width:80%;height:80%;float:left;' src='../images/anchor/$image'/></div></a></div>
-									<div class='delete_button' id='$media_anchor_image_id' style='width:15px;float:left;'> <img src='../images/cancel.png'/></div>
-									</li>";
+									<div><img class='image' style='width:60%;height:60%;' src='images/anchor/$image'/></div></a></div>
+									<button id='$media_anchor_image_id' class='delete_button' style='background-image:url(images/cancel.png);width:15px;height:15px;' onclick='delete_button(this)'> </button>
+									<div><img class='edit_button' style='width:16px;'src='images/tag_blue_add.png';></img></div>
+									</li></ul>";
 							}}
 							$row = $result->fetch_array(MYSQL_ASSOC);
 						}

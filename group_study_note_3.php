@@ -2,6 +2,12 @@
 $member_id = $_SESSION['member_id'];
 $user_media_id = mysql_escape_string($_GET['user_media_id']);
 $team_id = mysql_escape_string($_GET['team_id']);
+if ($_GET['anchor_time']) {
+	$anchor_time = $_GET['anchor_time'];
+}else{
+	$anchor_time = 0;
+	$anchor_descript = "請輸入您欲註記的內容..";
+}
 if(!$_SESSION['account'])
 echo "<script>document.location.href='index.php'</script>";
 ?>
@@ -28,6 +34,41 @@ echo "<script>document.location.href='index.php'</script>";
 }
 </style>
 <![endif]-->
+<script>
+//監聽video的各個属性
+function settime(tValue) {  
+    var video = document.getElementById("MovieShow");
+	video.currentTime = tValue;
+}
+</script>
+<script>
+function delete_button(obj){
+// $(".delete_button").click(function(){
+	if(member_id.length>=1){
+		var media_anchor_image_id=$(obj).attr('id');
+		//var media_anchor_image_id=$(this).attr('id');
+		$.post("php/delete_anchor_text.php",{media_anchor_image_id:media_anchor_image_id},function(data) {
+			var del_anchor="'li #"+media_anchor_image_id+"'";
+			alert("已刪除註記");
+			action='刪除圖片註記';
+			record(member_id,action);
+			$(del_anchor).remove(); 
+		});
+		var updateTime=self.setInterval(function(){
+		$.post("note_ajax.php",{user_media_id:user_media_id},function(data) {
+				$("#jcarousel").html(data);
+			});
+		},10);
+		window.setTimeout(function() {
+		updateTime = window.clearInterval(updateTime);
+		},1000);
+
+		   
+	}else
+	alert("請先登入");
+};	
+</script> 
+
 <style type="text/css">
 .temp_movie{
 cursor:pointer;
@@ -184,7 +225,23 @@ color:#FFF
             <div id="note"> 
                 <input type="hidden" id="anchor_time" value="" /> 
                 <label>● 註記內容：</label>           
-                <textarea cols="10" id="anchor_descript" style="width:100%;height:100px">請輸入您欲註記的內容..</textarea><br/>
+                <textarea cols="10" id="anchor_descript" style="width:100%;height:100px">
+                <?php
+			$query ="SELECT media_anchor_image.anchor_descript, media_anchor_image.anchor_time
+		FROM member
+		LEFT JOIN media_anchor_image ON member.member_id =  media_anchor_image.member_id
+		WHERE user_media_id = '$user_media_id'
+		AND media_anchor_image.member_id = '$member_id'
+        AND anchor_time='$anchor_time'";
+				$result = $mysqli->query($query);
+				while($row = $result->fetch_array(MYSQL_ASSOC)){
+				   $anchor_descript = $row["anchor_descript"];
+				   	echo $anchor_descript;					
+				}
+				echo $anchor_descript;	
+	?>
+         
+</textarea><br/>
                 <button id="anchor" style='border-bottom: hidden; background-color: #95CFF2; color: #FFF; width: 100%;'>留下註記</button>
             </div>    
                   
@@ -203,6 +260,7 @@ color:#FFF
     <div class="cbp-spmenu-push">
 	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
 			<h3>我的註記</h3>
+            <div id="jcarousel" style="padding:20px;">
 	<?php
 	   $query="SELECT member.name, media_anchor_image.media_anchor_image_id, media_anchor_image.anchor_descript, media_anchor_image.noteColor, media_anchor_image.anchor_time, media_anchor_image.image
 				FROM member
@@ -249,9 +307,9 @@ color:#FFF
 							<a style='text-decoration: none;height:80%;' href='group_study_note_3.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'>
 							<div id='$anchor_time' class='antime $anchor_time' style='font-size:12pt;'>註記時間：[$h:$m:$s]</div><br/>
 							<div id='$anchor_descript' style='font-size:12pt;'>註記內容：$anchor_descript</div><br/>
-							<div><img class='image' style='width:60%;height:60%;' src='images/anchor/$image'/></div></a></div>
-							<div><img class='delete_button' style='width:16px;'src='images/cancel.png';></img></div> 
-							<div><img class='edit_button' style='width:16px;'src='images/tag_blue_add.png';></img></div>
+							<div><img class='image' style='width:60%;height:60%;float:left;' src='images/anchor/$image'/></div></a></div>
+							<button id='$media_anchor_image_id' class='delete_button' style='background-image:url(images/cancel.png);width:15px;height:15px;margin-left:10px;' onclick='delete_button(this)'> </button>
+							<div><img class='edit_button' style='width:16px;margin-left:10px;'src='images/tag_blue_add.png';></img></div>
 							</li>";
 					}}
 					$row = $result->fetch_array(MYSQL_ASSOC);
@@ -259,6 +317,7 @@ color:#FFF
 	}
 		
 	?>
+    	</div>
 		</nav>
 		<div class="container">
         <button id="showRight" class="cbp-spmenu-vertical cbp-spmenu-right cbp-spmenu-open"> 我的註記 </button>
@@ -314,36 +373,26 @@ $(document).ready(function(){
 		/*按下留下註記按鈕以新增註記*/
 		$.post("php/insert_anchor_image_text.php",{member_id:member_id,user_media_id:user_media_id,url:url,media_type:media_type,anchor_descript:$("#anchor_descript").val(),anchor_time:$("#anchor_time").val(),privacy:"privacy"},
 		function(data) {
-			alert("已新增註記，重新整理以查看註記內容");
+			alert("已新增註記");
 			action='新增圖文註記'+$("#anchor_descript").val();
 			record(member_id,action);
 			$("#anchor_descript").html(data); 
 			$("#anchor_descript").val(' '); 
 			$("#anchor_time").val(' ');
 		});
+		var updateTime=self.setInterval(function(){
+			$.post("note_ajax.php",{user_media_id:user_media_id},function(data) {
+				$("#jcarousel").html(data);
+			});
+		},10);
+		window.setTimeout(function() {
+		updateTime = window.clearInterval(updateTime);
+		},1000);
 	}else{
 		alert("請先登入");
 	}
+	
  });
-});
-
-$(function(){  
-$(".delete_button").click(function(){
-	if(member_id.length>=1){
-		//var button_type="image";
-		var media_anchor_image_id=$(this).parents('li').attr('id');
-		//alert(media_anchor_id);
-		$.post("php/delete_anchor_text.php",{media_anchor_image_id:media_anchor_image_id},function(data) {
-			var del_anchor="'li #"+media_anchor_image_id+"'";
-			alert("已刪除註記，重新整理以查看註記內容");
-			action='刪除圖片註記';
-			record(member_id,action);
-			$(del_anchor).remove(); 
- 
-		});
-	}else{
-		alert("請先登入");}
-	});
 });
 
 $('.edit_button').click(function(){
