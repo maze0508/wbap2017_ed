@@ -5,21 +5,10 @@ $user_media_id = mysql_escape_string($_POST['user_media_id']);
 $member_id = mysql_escape_string($_POST['member_id']);
 $anchor_class_name = mysql_escape_string($_POST['anchor_class_name']);
 
-if($button_type=="image"){
-	$query="insert into anchor_class(member_id,user_media_id,anchor_class_name,type) values('$member_id','$user_media_id','$anchor_class_name','1')";
-	$result = $mysqli->query($query);
-	$query="SELECT member.name,  anchor_class.type,anchor_class.anchor_class_id,anchor_class.anchor_class_name FROM member  LEFT JOIN anchor_class ON member.member_id = anchor_class.member_id WHERE user_media_id ='$user_media_id' AND anchor_class.member_id ='$member_id' AND anchor_class.type ='1' ORDER BY anchor_class.anchor_class_id ";
-	$result = $mysqli->query($query);
-}else{
 	$query="insert into anchor_class(member_id,user_media_id,anchor_class_name) values('$member_id','$user_media_id','$anchor_class_name')";
 	$result = $mysqli->query($query);
-
-
-	$query="SELECT member.name,  anchor_class.anchor_class_id,anchor_class.anchor_class_name FROM member  LEFT JOIN anchor_class ON member.member_id = anchor_class.member_id WHERE user_media_id ='$user_media_id' AND anchor_class.member_id ='$member_id' AND anchor_class.type ='0' ORDER BY anchor_class.anchor_class_id ";
-	
-
+	$query="SELECT member.name,anchor_class.anchor_class_id,anchor_class.anchor_class_name FROM member  LEFT JOIN anchor_class ON member.member_id = anchor_class.member_id WHERE anchor_class.member_id ='$member_id' AND anchor_class.type ='0' ORDER BY anchor_class.anchor_class_id ";
 	$result = $mysqli->query($query);
-}		
 		$sum=1;	
 		while($row = $result->fetch_array(MYSQL_ASSOC)){
 

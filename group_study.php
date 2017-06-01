@@ -127,24 +127,24 @@ width:300px;}
 							$aimgs
 						</div>
 						<div style='width:100%;height:100px;'>
-							<label>【 $subject_catalog 】 <a style='text-decoration: none;' href='group_study_note_3.php?user_media_id=$user_media_id&team_id=$team_id'>$learning_name</a></label><br>
+							<label>【 $subject_catalog 】 <a style='text-decoration: none;' href='start_learning_1.php?user_media_id=$user_media_id&team_id=$team_id'>$learning_name</a></label><br>
 							<label>主題作者：$name</label><br>
 							
 							<label>學期期限：$learning_start ~ $learning_end</label><br>
 							<label>學習概念：$learning_content</label><br/>
-							<label>學習組別：$team_id</label>
-							<label class='groupmember'>小組成員：</label>";
+							<label>學習組別：$team_id</label>";
+							//<label class='groupmember'>小組成員：</label>";
 							
 				$query01 = "SELECT name FROM  team_member,member WHERE  team_member.member_id = member.member_id AND team_id = '$team_id'";
 				$result01 = $mysqli->query($query01);
 				while($row01 = $result01->fetch_array(MYSQL_ASSOC) ){
 				$group_member = $row01["name"];	 
-				echo"
+				/*echo"
 				
 				<div class='single_line'>
 				<label id='line' >$group_member</label>
 				</div>
-				";
+				";*/
 				}
 				mysqli_free_result($result01);
 				echo"

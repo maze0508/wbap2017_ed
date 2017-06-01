@@ -18,8 +18,7 @@ if($anchor_time){
 $image_name="$user_media_id"."_"."$anchor_time".".jpg";
 shell_exec("ffmpeg -i ../user_movie/".$media_url.".".$media_type." -ss $anchor_time -vframes 1 -y ../images/anchor/$image_name");
 
-$query="insert into media_anchor_image(user_media_id,member_id,image,anchor_descript,anchor_date,anchor_time) values('$user_media_id','$member_id','$image_name','$anchor_descript','$anchor_date','$anchor_time')";
+$query="INSERT INTO media_anchor_image(user_media_id,member_id,image,anchor_descript,anchor_date,anchor_time) values('$user_media_id','$member_id','$image_name','$anchor_descript','$anchor_date','$anchor_time')";
 $result = $mysqli->query($query);
-
 }
 ?>

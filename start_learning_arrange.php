@@ -21,7 +21,7 @@ echo "<script>document.location.href='index.php'</script>";
 <script type="text/javascript" src="js/prettify.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2/swfobject.js"></script>
-<script src="http://threedubmedia.googlecode.com/files/jquery.event.drag-1.5.min.js" type="text/javascript"></script>
+<script src="js/jquery.event.drag-1.5.min.js" type="text/javascript"></script>
 <script src="js/jquery.jOrgChart.js"></script>
 <!--[if IE]>
 <style type="text/css">
@@ -213,7 +213,7 @@ $(function(){
 						$.post("php/composition_save.php",{node:node,composition:composition,member_id:member_id,index_new:index_new,composition_name:composition_name,parent_arr_new:parent_arr_new,this_id:this_id,point1_id:point1_id,point2_id:point2_id,line_new:line_new},
 						function(data) {
 							//$('div#Edit').attr('name',data);
-					
+							
 							show(data,member_id);
 							$.post("php/composition_select.php",{member_id:member_id},
 								function(data) {$('div#compos_book').html(data);
@@ -255,6 +255,7 @@ $(function(){
 							node[index_new] = new Array();
 							node[index_new][0]=$(this).find('.descript_text').attr('id');
 							node[index_new][1]=$(this).find('.image_url').attr('id');
+							alert(node[index_new][0]);
 						})
 					}
 			}
@@ -411,7 +412,9 @@ $(function(){
 			function(){
 				$(".all_useranchor").remove();
 				$.post("php/composition_all_useranchor.php",{anchor_type:anchor_type,member_id:member_id},
-					function(data) {$(thisid).after(data);});
+					function(data) {
+						$('.test').val(data);
+						$(thisid).after(data);});
 			},function(){
 				$(thisid).siblings('.all_useranchor').remove();
 		}).trigger('click');
@@ -434,8 +437,9 @@ $(function(){
 	$('select#media_select').live("change", function(){ 
 		//選擇影片
 		user_media_id=$(this).val();
-		var anchor_type=$(this).attr('class');
-		$.post("php/composition_all_useranchor2.php",{anchor_type:anchor_type,member_id:member_id,user_media_id:user_media_id},
+		//var anchor_type=$(this).attr('class');
+		//$.post("php/composition_all_useranchor2.php",{anchor_type:anchor_type,member_id:member_id,user_media_id:user_media_id},
+		$.post("php/composition_all_useranchor2.php",{member_id:member_id,user_media_id:user_media_id},
 			function(data) {
 				$('div#media_class').html(data);
 			});
@@ -444,14 +448,14 @@ $(function(){
 	$('div.open_anchor').live("click",function(){
 		var class_id=$(this).parent().attr("id");
 		var anchor_type=$(this).parents('td').attr("class");
-		
 		$.post("php/composition_class_go.php",{anchor_type:anchor_type,class_id:class_id,member_id:member_id,user_media_id:user_media_id},
 			function(data) {
-					$('div#media_anchor').html(data);
+					$('div #media_anchor_image').html(data);
 			});	
 		
 	});
 	$('img.image_new').live("click",function(){
+		//如果點選了註記的圖片
 		//var image_url="<img style='width:200px;' src='"+$(this).attr('src')+"' />";
 		var thisid="div#"+$(this).parents('div.all_useranchor').siblings('div.image_choose').attr('id');
 		var image_url=$(this).attr('src');
@@ -545,6 +549,19 @@ $(function(){
 			
 				});
 	})
+	$('.del_compos').live("click",function(){
+		var composition="list";
+		var del_compos_id = $(this).attr('id');
+		if(confirm("確定刪除本章節?")){
+			$.post("php/composition_drop.php",{del_compos_id:del_compos_id},
+				function(data) {
+					alert(data);
+					add_book(member_id,composition);
+
+			});
+		}
+	})
+	
 	$('.del_child').live("click",function(){
 
 		var $id="li table[id="+$(this).parents('table').attr('id')+"]";

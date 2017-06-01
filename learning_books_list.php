@@ -46,16 +46,15 @@ height:400px;
 	}else{
 		echo "<h2><input type='button' class='colorbox' style='background-image: url(images/login_btn.jpg);width:90px; height:30px;'/></h2>";
 	}
-	?>';
+	?>';</div>
 <!-- start page -->
-<div id="page" style="height:500px; background-repeat:no-repeat;
-	background-position:right bottom;background-size:26%;background-image: url(images/test/favbk.png);">
+<div id="page">
 
   <div id='content'>
         <div class='Tit'><img src='images/test/pic-Tit.png'/>
             <a href='index.php' title='個人書房'>個人書房</a> >> <a href='#' title='筆記本'>筆記本</a>
          </div><br/><br/>
-
+	
 	<div id='compos_book'>
 		<?php
 		echo "<select id='compos_book_select'> <option value='change'>請選擇章節</option>";

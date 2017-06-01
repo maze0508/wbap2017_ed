@@ -8,11 +8,10 @@ var arrUrl_webgolds = ['index','post'];  // 緩存頁面做跳轉
 for(i in arrUrl_webgolds) {
   if(arrUrl_webgolds[i] == urlPath) {
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { //使用javascript回傳使用者瀏覽裝置的版本
-		if($_SESSION['account'])
-      urlPath = urlHref.split(urlHrefArray[4]); //抓取前面的網址
-	  urlHref = urlPath[0]+ "m/" + urlHrefArray[4]; 
-      window.location = urlHref; //轉址
-	  break;
+			  urlPath = urlHref.split(urlHrefArray[4]); //抓取前面的網址
+			  urlHref = urlPath[0]+ "m/" + urlHrefArray[4]; 
+			  window.location = urlHref; //轉址
+			  break;
     }
   }
 }

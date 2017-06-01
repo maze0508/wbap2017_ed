@@ -24,9 +24,11 @@ echo "<script>document.location.href='index.php'</script>";
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2/swfobject.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
+<script type="text/javascript" src="m/js/deviceListener.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
 <!--[if IE]>
 <style type="text/css">
 #sidebar #calendar {
@@ -233,10 +235,10 @@ color:#FFF
 		WHERE user_media_id = '$user_media_id'
 		AND media_anchor_image.member_id = '$member_id'
         AND anchor_time='$anchor_time'";
+				
 				$result = $mysqli->query($query);
 				while($row = $result->fetch_array(MYSQL_ASSOC)){
 				   $anchor_descript = $row["anchor_descript"];
-				   	echo $anchor_descript;					
 				}
 				echo $anchor_descript;	
 	?>
@@ -249,18 +251,19 @@ color:#FFF
 			</div>
 
 			<div style="float:right;width:120px">
-				<a style='text-decoration: none;' href='start_learning_class_2.php?user_media_id=<?php print $user_media_id; ?>&team_id=<?php print $team_id; ?>'><img src="images/test/stu-cf3.png" /><!-- 整理註記 --></a>
+				<a style='text-decoration: none;' href='start_learning_class.php?user_media_id=<?php print $user_media_id; ?>&team_id=<?php print $team_id; ?>'><img src="images/test/stu-cf3.png" /><!-- 整理註記 --></a>
            </div>
 		</div>
       </div>
 	<!-- end content -->
    	</div>
+    </div>
     <!-- end page -->
 	<!-- start 右側滑動選單 start-->
-    <div class="cbp-spmenu-push">
-	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
+    <div class="cbp-spmenu-push" style="overflow:scroll;overflow-X:hidden;">
+	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2" style="overflow:scroll;overflow-X:hidden;">
 			<h3>我的註記</h3>
-            <div id="jcarousel" style="padding:20px;">
+            <div id="jcarousel" style="padding:20px;overflow:scroll;overflow-X:hidden;">
 	<?php
 	   $query="SELECT member.name, media_anchor_image.media_anchor_image_id, media_anchor_image.anchor_descript, media_anchor_image.noteColor, media_anchor_image.anchor_time, media_anchor_image.image
 				FROM member
@@ -293,37 +296,41 @@ color:#FFF
 					$m = ($m < 10)?"0".$m:$m;
 					$s = ($s < 10)?"0".$s:$s;
 					
-			if($noteColor==0){
+			
 					//Youtube影片的註記內容，因為無法截圖，故不顯示圖片	
-   					  if($title && $found){
-						  echo "<li id='$media_anchor_image_id'>
-							<div><a style='text-decoration: none;' href='group_study_note_3.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'>
-							<div id='$anchor_time' class='antime $anchor_time' >註記時間：[$h:$m:$s]</div><div>註記內容：$anchor_descript</div></a>
-							<div><img class='delete_button' style='width:16px;'src='images/cancel.png';></img></div></div>
+   					if($title && $found){
+						  echo "<li id='$media_anchor_image_id'  style='margin-bottom:100px;margin-left:20px;list-style-type:none;'>
+							<div>
+							<a style='text-decoration: none;' href='start_learning_1.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'>
+							<div id='$anchor_time' class='antime $anchor_time' >註記時間：[$h:$m:$s]</div><div>註記內容：$anchor_descript</div>
+							</a>
+							<button id='$media_anchor_image_id' class='delete_button' style='background-image:url(images/cancel.png);background-size:100%;width:15px;height:15px;margin-left:10px; border: 0;' onclick='delete_button(this)'> </button>
+							</div>
 						</li>";
 					  }else{
-						echo "<li id='$media_anchor_image_id'>
+						echo "<li id='$media_anchor_image_id' style='margin-bottom:100px;margin-left:20px;list-style-type:none;'>
 							<div>
-							<a style='text-decoration: none;height:80%;' href='group_study_note_3.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'>
+							<a style='text-decoration:none;height:80%;' href='start_learning_1.php?user_media_id=$user_media_id&team_id=$team_id&anchor_time=$anchor_time'>
 							<div id='$anchor_time' class='antime $anchor_time' style='font-size:12pt;'>註記時間：[$h:$m:$s]</div><br/>
 							<div id='$anchor_descript' style='font-size:12pt;'>註記內容：$anchor_descript</div><br/>
-							<div><img class='image' style='width:60%;height:60%;float:left;' src='images/anchor/$image'/></div></a></div>
-							<button id='$media_anchor_image_id' class='delete_button' style='background-image:url(images/cancel.png);width:15px;height:15px;margin-left:10px;' onclick='delete_button(this)'> </button>
-							<div><img class='edit_button' style='width:16px;margin-left:10px;'src='images/tag_blue_add.png';></img></div>
+							<div><img class='image' style='width:40%;height:40%;float:left;' src='images/anchor/$image'/></div>
+							</a>
+							<button id='$media_anchor_image_id' class='delete_button' style='background-image:url(images/cancel.png);background-size:100%;width:15px;height:15px;margin-left:10px; border: 0;' onclick='delete_button(this)'> </button>
+							</div>
 							</li>";
-					}}
+					}
 					$row = $result->fetch_array(MYSQL_ASSOC);
+					
 		}
 	}
 		
 	?>
     	</div>
 		</nav>
-		<div class="container">
+	  </div>
+<div class="container">
         <button id="showRight" class="cbp-spmenu-vertical cbp-spmenu-right cbp-spmenu-open"> 我的註記 </button>
 	  </div>
-  </div>
-
 		<script src="js/classie.js"></script>
 		<script>
 			var menuRight = document.getElementById( 'cbp-spmenu-s2' ),
@@ -346,9 +353,11 @@ color:#FFF
 	<p class="legal">靜宜大學</p>
 	<p class="credit">Wang, Dai-Yi </p>
 </div>
+
 <script type="text/javascript" src="js/jquery.colorbox-min.js"></script>
 <script type="text/javascript" src="js/menu.js"></script>
 <script type="text/javascript">
+jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/msie ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
 var member_id = "<?php print $_SESSION['member_id']; ?>";
 var compet = "<?php print $_SESSION['compet']; ?>";
 var user_media_id = "<?php print $user_media_id; ?>";
@@ -395,14 +404,14 @@ $(document).ready(function(){
  });
 });
 
-$('.edit_button').click(function(){
+/*$('.edit_button').click(function(){
 	if(member_id.length>=1){
 		var edit_anchor_image_id=$(this).parents('li').attr('id');
 		action='編輯圖片註記';
 		record(member_id,action);
-		$(this).colorbox({href:"crop_1.php?media_anchor_image_id="+edit_media_image_id+"",width:"600", height:"500",iframe:true,slideshow:true});
+		$(this).colorbox({href:"crop_1.php?media_anchor_image_id="+edit_anchor_image_id+"",width:"600", height:"500",iframe:true,slideshow:true});
 	}
-})
+})*/
 
 $(function(){  
 $('#down').toggle(
@@ -432,9 +441,9 @@ $('body').keydown(function(){
 
 
 
-$("#anchor_descript").click(function(){($.browser.msie)?thisMovie('player').sendEvent('play','false'):thisMovie('player2').sendEvent('play','false')}).one("click",function(){
+/*$("#anchor_descript").click(function(){($.browser.msie)?thisMovie('player').sendEvent('play','false'):thisMovie('player2').sendEvent('play','false')}).one("click",function(){
 $(this).val("");
-})
+})*/
 
 $(document).bind('cbox_closed', function(){
 		$.post("php/insert_anchor_image_text.php",{member_id:member_id,user_media_id:user_media_id,privacy:"privacy"},
@@ -456,7 +465,7 @@ $(document).bind('cbox_closed', function(){
 })
 
 
-$("div.antime").live("click",function(){($.browser.msie)?thisMovie('player').sendEvent('SEEK',$(this).attr("id")):thisMovie('player2').sendEvent('SEEK',$(this).attr("id"));})
+//$("div.antime").live("click",function(){($.browser.msie)?thisMovie('player').sendEvent('SEEK',$(this).attr("id")):thisMovie('player2').sendEvent('SEEK',$(this).attr("id"));})
 
 
 function playerReady(obj) {

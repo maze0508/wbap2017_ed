@@ -121,10 +121,10 @@ background-color:#99C;
 				   $subject_catalog = $row["subject_catalog"];	
 				   $url = $row["url"];	
 				   $found = strstr($url,"youtube");					   
-				   ($found)? $aimgs = "<img src='' class='youtube imgs' name='$url' align='top' />" : $aimgs = "<img class='imgs' src='user_pics/$url.jpg' align='top' />";
+				   ($found)? $aimgs = "<img src='' class='youtube imgs' name='$url' align='top'  />" : $aimgs = "<img class='imgs' src='user_pics/$url.jpg' align='top' style='width:112px;height:82px;'/>";
 				   	echo "
 					<div class='temp_movie'>
-						<div style='width:140px;float:left;'>
+						<div style='width:100px;float:left;margin-right:35px;'>
 							$aimgs
 						</div>
 						<div style='width:100%;'>

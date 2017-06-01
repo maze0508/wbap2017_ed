@@ -221,7 +221,7 @@ ul#menu2 {
 	height: 900px;
 	
 }
-#content .Tit {
+.Tit {
 	font-family: 微軟正黑體;
 	float: left;
 	font-size: 17px;
@@ -229,7 +229,7 @@ ul#menu2 {
 	color: #777777;
 	text-decoration: none;
 }
-#content .Tit  img{
+.Tit  img{
 	width: 20px;
 }
 
@@ -238,42 +238,19 @@ ul#menu2 {
 	width: 900px;
 }
 
-#contentC .Note{
-	background-image: url(../images/noteS.png);
-	background-position:left;
-	background-repeat: no-repeat;
-	background-color: white;
-	font-family:"微軟正黑體";
-	width:170px;
-	height:175px;
-	padding: 0px 2px 2px 17px;
-	table-layout: fixed; 
-	word-wrap: break-word; 
-	overflow: hidden;
-	border-left: solid 1px white;
-	border-right: solid 1px white;
-	border-top: solid 1px white;
-	border-bottom: solid 1px white;
-	float: left;
-	margin-left: 0.15cm;
-	margin-top:0.2cm;
-}
+#contentC .Note,
 #contentC .Note_other{
 	background-image: url(../images/note2S.png);
+	background-size:110%;
 	background-position:left;
 	background-repeat: no-repeat;
-	background-color: white;
 	font-family:"微軟正黑體";
-	width:170px;
-	height:175px;
-	padding: 0px 2px 2px 17px;
+	width:180px;
+	height:200px;
+	padding: 2px 2px 2px 17px;
 	table-layout: fixed; 
 	word-wrap: break-word; 
 	overflow: hidden;
-	border-left: solid 1px white;
-	border-right: solid 1px white;
-	border-top: solid 1px white;
-	border-bottom: solid 1px white;
 	float: left;
 	margin-left: 0.15cm;
 	margin-top:0.2cm;
@@ -321,16 +298,13 @@ ul#menu2 {
 }
 
 #sidebarC .Class {
-
 	float: left;
-	border:1px solid #999;
-	cursor:pointer;
-	padding:2px;
-
+	cursor: pointer;
+	padding: 2px;
 	width: 225px;
-	text-align:center;
-	font-size:32px;
-	font-weight:bold;
+	text-align: center;
+	font-size: 32px;
+	font-weight: bold;
 	
 }
 #sidebarR {
@@ -382,7 +356,6 @@ ul#menu2 {
 }
 #sidebar {
 	float: right;
-	width: 253px;
 
 }
 

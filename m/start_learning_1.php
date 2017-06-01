@@ -1,9 +1,13 @@
+<!-- 註記部分使用自動更新功能 -->
 <?php 
 session_start();
 $member_id = $_SESSION['member_id'];
 $user_media_id = $_GET['user_media_id'];
 if ($_GET['anchor_time']) {
 	$anchor_time = $_GET['anchor_time'];
+}else{
+	$anchor_time = 0;
+	$anchor_descript = "請輸入您欲註記的內容..";
 }
 if(!$_SESSION['account']) {
 	echo "<script>document.location.href='index.php'</script>;";
@@ -13,7 +17,7 @@ if(!$_SESSION['account']) {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html, charset=utf-8" />
-<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1,user-scalable=0">
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1,user-scalabl e=0">
 <title>Video Learning</title>
 
 <link href="css/mobile_css.css" rel="stylesheet" type="text/css" media="screen"/>
@@ -32,7 +36,9 @@ $(document).ready(function() {
     });
     $(".nav > ul > li:has(ul) > a").append('<div class="arrow-bottom"></div>');
 });
+
 </script>
+
 <script>
 //監聽video的各個属性
 function settime(tValue) {  
@@ -40,7 +46,51 @@ function settime(tValue) {
 	video.currentTime = tValue;
 }
 </script>
- 
+<script>
+//記錄註記時間
+function recordNote(){
+    if (document.getElementById("MovieShow")) {
+   		 Media =  document.video = document.getElementById("MovieShow");
+		 $("#anchor_time").val(Math.floor(Media.currentTime));
+    }else{
+		
+		 var hour =  $("#hour").val();	
+		 var minute = $("#minute").val();
+		 var second =  $("#second").val(); 	
+		 var time = hour*3600+minute*60+second*1;
+		 $("#anchor_time").val(time);
+
+		 }
+}
+
+ </script>
+<script>
+function delete_button(obj){
+// $(".delete_button").click(function(){
+	if(member_id.length>=1){
+		var media_anchor_image_id=$(obj).attr('id');
+		//var media_anchor_image_id=$(this).attr('id');
+		$.post("../php/delete_anchor_text.php",{media_anchor_image_id:media_anchor_image_id},function(data) {
+			var del_anchor="'li #"+media_anchor_image_id+"'";
+			alert("已刪除註記");
+			action='刪除圖片註記';
+			record(member_id,action);
+			$(del_anchor).remove(); 
+		});
+		var updateTime=self.setInterval(function(){
+		$.post("note_ajax_m.php",{user_media_id:user_media_id},function(data) {
+				$("#jcarousel").html(data);
+			});
+		},10);
+		window.setTimeout(function() {
+		updateTime = window.clearInterval(updateTime);
+		},1000);
+
+		   
+	}else
+	alert("請先登入");
+};	
+</script> 
 <style type="text/css">
 #note label{
 	color:#69C;	
@@ -110,14 +160,12 @@ function settime(tValue) {
 				   $url = $row["url"];	
 				   $found = strstr($url,"youtube");	
 				   $media_type .= $row['media_type']; 	
-				   $title = $row["title"];			
-				   		   
+				   $title = $row["title"];					   
 				   	echo "<label style='color:#69F'>$learning_name</label>";					
 				}
-				mysqli_free_result($result);
 				?>	
                 
-	<div id='pl' style="width:100%;overflow:auto;border:1px solid #DEF;">
+	<div style="width:100%;overflow:auto;border:1px solid #DEF;">
                		<?php
                     if($title && $found){
 				        $UrlArray = explode("=" , $url);
@@ -128,42 +176,6 @@ function settime(tValue) {
 							echo "$youtube_name?start=".$anchor_time;}else{
 								echo "$youtube_name";}
 						 ?>" frameborder="0" denyfullscreen></iframe>
-
-                         <script>
-						  var tag = document.createElement('script');
-						  tag.src = "https://www.youtube.com/iframe_api";
-						  var firstScriptTag = document.getElementsByTagName('script')[0];
-						  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-						 
-						 function recordNoteY(){
-						  //  This code loads the IFrame Player API code asynchronously.
-						  //var tag = document.createElement('script');
-						  //tag.src = "https://www.youtube.com/iframe_api";
-						  //var firstScriptTag = document.getElementsByTagName('script')[0];
-						  //firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-						  onYouTubeIframeAPIReady() 
-						 }
-						  //  This function creates an <iframe> (and YouTube player)
-						  //    after the API code downloads.
-						  function onYouTubeIframeAPIReady() {
-							 //var player = new YT.Player('pl');
-							 player = YouTubePlayer('ytplayer');
-							 alert(player);
-							 player.loadVideoById('M7lc1UVf-VE');
-							 alert(player);
-
-						  
-							//var player = new YT.Player('ytplayer');
-							//alert(player);
-							//var t = player.getCurrentTime();
-							//alert(t);
-						  }
-						  function test(){
-							//var anchor_time = document.getElementById('ytplayer');
-							//var t = $("anchor_time").val(player.getCurrentTime());
-
-						  }
-                         </script>
 				    <?php	
 				    }else if($title && $media_type){
 						?>
@@ -189,35 +201,51 @@ function settime(tValue) {
 				        </video>
 				    <?php
 						}
-                    ?> 
- 
+                    ?>   
            </div>
+           
 <!-- 播放器end / 留下註記start -->
 <div id="note"> 
     <input type="hidden" id="anchor_time" value="" /> 
-	<label>● 註記內容：</label>           
-	<textarea cols="10" id="anchor_descript" style="width:100%;height:100px">請輸入您欲註記的內容..</textarea><br/>
+	<label>● 註記內容：</label>    
+    <textarea cols='10' id='anchor_descript' style='width:100%;height:100px'>  
+    <?php
+			$query ="SELECT media_anchor_image.anchor_descript, media_anchor_image.anchor_time
+		FROM member
+		LEFT JOIN media_anchor_image ON member.member_id =  media_anchor_image.member_id
+		WHERE user_media_id = '$user_media_id'
+		AND media_anchor_image.member_id = '$member_id'
+        AND anchor_time='$anchor_time'";
+				$result = $mysqli->query($query);
+				while($row = $result->fetch_array(MYSQL_ASSOC)){
+				   $anchor_descript = $row["anchor_descript"];
+				   	echo $anchor_descript;					
+				}
+				echo $anchor_descript;	
+	?>
+         
+ </textarea><br/>
     <button id="anchor" style='border-bottom: hidden; background-color: #95CFF2; color: #FFF; width: 100%;'>留下註記</button>
-
 </div>          
 <!-- 留下註記end -->
-  </div>
-  <!--隱藏/顯示註記-->
+</div>
+
+<!--隱藏/顯示註記-->
 <div class="cbp-spmenu-push">
 <nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="cbp-spmenu-s4">
 <!--水平滑動-->
 <div class="wrapper">
  <div class="jcarousel-wrapper">
  <!--註記內容start-->
-  <div class="jcarousel">
-    <ul>
-  <?php
+  <div class="jcarousel" id="jcarousel">
+<ul>
+<?php
    $query="SELECT member.name, media_anchor_image.media_anchor_image_id, media_anchor_image.anchor_descript, media_anchor_image.noteColor, media_anchor_image.anchor_time, media_anchor_image.image
 				FROM member
 				LEFT JOIN media_anchor_image ON member.member_id =  media_anchor_image.member_id
 				WHERE user_media_id = '$user_media_id'
 				AND media_anchor_image.member_id = '$member_id'  
-				ORDER BY media_anchor_image.anchor_time";
+				ORDER BY media_anchor_image.anchor_date DESC";
 				
 				$result = $mysqli->query($query);
 				$row = $result->fetch_array(MYSQL_ASSOC);
@@ -256,22 +284,22 @@ function settime(tValue) {
 							<div id='$anchor_time' class='antime $anchor_time' style='font-size:12pt;'>註記時間：[$h:$m:$s]</div><br/>
 							<div id='$anchor_descript' style='font-size:12pt;'>註記內容：$anchor_descript</div><br/>
 							<div><img class='image' style='width:80%;height:80%;float:left;' src='../images/anchor/$image'/></div></a></div>
-							<img class='delete_button' style='width:15px;float:left;' src='../images/cancel.png'/>
+							<button id='$media_anchor_image_id' class='delete_button' style='background-image:url(../images/cancel.png);width:15px;height:15px;' onclick='delete_button(this)'> </button>
 							</li>";
 					}}
 					$row = $result->fetch_array(MYSQL_ASSOC);
 				}
 				
 			}
-   ?>
-   </ul>
-  </div>
+   ?>   </ul>
+   </div>
   <!--註記內容end-->
   <a href="#" class="jcarousel-control-prev">＜</a>
   <a href="#" class="jcarousel-control-next">＞</a>
   </div>
 </div>
 <!--水平滑動end-->
+
 </nav>
 
 <!--隱藏/顯示註記的按鈕start-->       
@@ -297,9 +325,9 @@ function settime(tValue) {
 </script>
 </div>
 <!--隱藏/顯示註記end-->
-</div>
-<!---主內容end-->
-<script type="text/javascript">
+</div>    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/JavaScript">
 var member_id = "<?php print $_SESSION['member_id']; ?>";
 var user_media_id = "<?php print $user_media_id; ?>";
 var url = "<?php print $url; ?>";
@@ -308,10 +336,9 @@ function record(member_id,action){
 	$.post("../php/record.php",{member_id:member_id,action:action},function(data) {	
 		 });
 };
-$(document).ready(function(){
+$(document).ready(function() {
 
-  $("#anchor").click(function(){
-	  
+$("#anchor").click(function(){	
 	if(member_id.length>=1){
 		
 		/*如果是html播放器，以下紀錄目前時間*/
@@ -321,52 +348,27 @@ $(document).ready(function(){
 		}
 		/*按下留下註記按鈕以新增註記*/
 		$.post("../php/insert_anchor_image_text.php",{member_id:member_id,user_media_id:user_media_id,url:url,media_type:media_type,anchor_descript:$("#anchor_descript").val(),anchor_time:$("#anchor_time").val(),privacy:"privacy"},function(data) {
-		alert("已新增註記，重新整理以查看註記內容");
+		alert("已新增註記");
 		action='新增圖文註記'+$("#anchor_descript").val();
 		record(member_id,action);
 		$("#anchor_descript").html(data); 
 		$("#anchor_descript").val(' '); 
 		$("#anchor_time").val(' ');
 		});
+		var updateTime=self.setInterval(function(){
+			$.post("note_ajax_m.php",{user_media_id:user_media_id},function(data) {
+				$("#jcarousel").html(data);
+			});
+		},10);
+		window.setTimeout(function() {
+		updateTime = window.clearInterval(updateTime);
+		},1000);
+		
 	}else{
 		alert("請先登入");
 	}
  });
-});
 
-$(function(){  
-
-$(".delete_button").click(function(){
-	if(member_id.length>=1){
-		//var button_type="image";
-		var media_anchor_image_id=$(this).parents('li').attr('id');
-		//alert(media_anchor_id);
-		$.post("../php/delete_anchor_text.php",{media_anchor_image_id:media_anchor_image_id},function(data) {
-			var del_anchor="'li #"+media_anchor_image_id+"'";
-			alert("已刪除註記，重新整理以查看註記內容");
-			action='刪除圖片註記';
-			record(member_id,action);
-			$(del_anchor).remove(); 
- 
-		});
-	}else
-	alert("請先登入");
-});
-
-//點擊註記會跳轉至相對影片位置
-$("#anchor_descript").click(function(){
-	($.browser.msie)?thisMovie('player').sendEvent('play','false'):thisMovie('player2').sendEvent('play','false')}).one("click",function(){
-$(this).val("");
-});
-/*
-$("div.antime").live("click",function(){($.browser.msie)?thisMovie('player').sendEvent('SEEK',$(this).attr("id")):thisMovie('player2').sendEvent('SEEK',$(this).attr("id"));});
-
-function playerReady(obj) {
-action='觀看影片-'+title;
-record(member_id,action);
-($.browser.msie)?thisMovie('player').addModelListener('TIME','show'):thisMovie('player2').addModelListener('TIME','show');
-}
-*/
 function thisMovie(movieName) {
 	if(navigator.appName.indexOf("Microsoft") != -1){
 		return window[movieName];
@@ -374,17 +376,10 @@ function thisMovie(movieName) {
 		return document[movieName];
 	}
 };
-/*
-function show(obj){
-	$("div.antime").parents('table').css("background-color","");
-	$('#sidebar').scrollTop();
-	$("div."+Math.floor(obj.position)).parents('table').css("background-color","#FC9");
-}
-*/
-//紀錄動作
-
+ 
+ 
 });
-
 </script>
 </body>
 </html>
+

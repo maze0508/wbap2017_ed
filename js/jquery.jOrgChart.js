@@ -111,16 +111,17 @@
     // Construct the node container(s)
     var $nodeRow = $("<tr/>").addClass("node-cells");
     var $nodeCell = $("<td/>").addClass("node-cell").attr("colspan", 2);
-    var $childNodes = $node.children("ul:first").children("li");
+    var $childNodes = $node.children("ul:first");
     var $nodeDiv;
     
     if($childNodes.length > 1) {
+
       $nodeCell.attr("colspan", $childNodes.length * 2);
     }
     // Draw the node
     // Get the contents - any markup except li and ul allowed
     var $nodeContent = $node.clone()
-                            .children("ul,li")
+                            .children("li")
                             .remove()
                             .end()
                             .html();

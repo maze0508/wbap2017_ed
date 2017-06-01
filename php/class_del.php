@@ -7,7 +7,7 @@ $button_type = mysql_escape_string($_POST['button_type']);
 
 
 if($button_type=="image"){
-	$query="UPDATE media_image SET anchor_class_id='' WHERE anchor_class_id='$anchor_class_id'";
+	$query="UPDATE media_anchor_image_image SET anchor_class_id='' WHERE anchor_class_id='$anchor_class_id'";
 	$result = $mysqli->query($query);
 
 	$query="DELETE from anchor_class WHERE anchor_class_id='$anchor_class_id'";
@@ -24,7 +24,7 @@ if($button_type=="image"){
 			$anchor_class_id = $row['anchor_class_id'];
 			$name = $row['name'];
 			$image = $row['image'];
-			$media_anchor_id = $row['media_image_id'];
+			$media_anchor_image_image_id = $row['media_anchor_image_image_id'];
 			$noteColor = $row['noteColor'];
 			if($row['anchor_class_id']){
 			
@@ -37,17 +37,17 @@ if($button_type=="image"){
 			}
 			if($noteColor==0){
 			
-				echo "<div id='$media_anchor_id' class='Note' name='未分類'>
+				echo "<div id='$media_anchor_image_image_id' class='Note' name='未分類'>
 					<div name='$class_name' class='select_edit'>
 					<table><tr><td style='width:165px;'><div name='$anchor_class_id' class='select_class' >$class_name</div></td></tr></table></div>
-					<div  style='border-top:1px solid;cursor:pointer;width: 155px;' id='$media_anchor_id' class='descript_edit'>
+					<div  style='border-top:1px solid;cursor:pointer;width: 155px;' id='$media_anchor_image_image_id' class='descript_edit'>
 						<p><img class='note_descript' style='width:145px;' src='./images/anchor/$image';/></p>
 						
 					</div>
 				</div>";
 				
 			}else{
-				echo "<div id='$media_anchor_id' class='Note_other' name='未分類'>
+				echo "<div id='$media_anchor_image_image_id' class='Note_other' name='未分類'>
 					<div name='$class_name' class='select_edit'>
 						<table>
 							<tr>
@@ -57,7 +57,7 @@ if($button_type=="image"){
 							</tr>
 						</table>
 					</div>
-					<div  style='border-top:1px solid;cursor:pointer;width: 155px;' id='$media_anchor_id' class='descript_edit'>
+					<div  style='border-top:1px solid;cursor:pointer;width: 155px;' id='$media_anchor_image_image_id' class='descript_edit'>
 						<p><img class='note_descript' style='width:145px;' src='./images/anchor/$image';/></p>
 						
 					</div>
@@ -85,14 +85,14 @@ if($button_type=="image"){
 
 
 }else{
-	$query="UPDATE media_anchor SET anchor_class_id='' WHERE anchor_class_id='$anchor_class_id'";
+	$query="UPDATE media_anchor_image_image SET anchor_class_id='' WHERE anchor_class_id='$anchor_class_id'";
 	$result = $mysqli->query($query);
 
 	$query="DELETE from anchor_class WHERE anchor_class_id='$anchor_class_id'";
 	
 	$result = $mysqli->query($query);
 	
-	$query="select member.name,media_anchor.media_anchor_id,media_anchor.anchor_descript,media_anchor.noteColor,media_anchor.anchor_time,anchor_class.anchor_class_id,anchor_class.anchor_class_name  from member left join media_anchor on member.member_id =  media_anchor.member_id LEFT JOIN anchor_class ON media_anchor.anchor_class_id= anchor_class.anchor_class_id where media_anchor.user_media_id = '$user_media_id' AND media_anchor.member_id = '$member_id'  order by media_anchor.anchor_time";
+	$query="select member.name,media_anchor_image_image.media_anchor_image_image_id,media_anchor_image_image.anchor_descript,media_anchor_image_image.noteColor,media_anchor_image_image.anchor_time,anchor_class.anchor_class_id,anchor_class.anchor_class_name  from member left join media_anchor_image_image on member.member_id =  media_anchor_image_image.member_id LEFT JOIN anchor_class ON media_anchor_image_image.anchor_class_id= anchor_class.anchor_class_id where media_anchor_image_image.user_media_id = '$user_media_id' AND media_anchor_image.member_id = '$member_id'  order by media_anchor_image.anchor_time";
 		$result = $mysqli->query($query);
 		
 		while($row = $result->fetch_array(MYSQL_ASSOC)){
@@ -101,9 +101,9 @@ if($button_type=="image"){
 			$anchor_class_id = $row['anchor_class_id'];
 			$name = $row['name'];
 			$anchor_descript = $row['anchor_descript'];
-			$media_anchor_id = $row['media_anchor_id'];
+			$media_anchor_image_id = $row['media_anchor_image_id'];
 			$noteColor = $row['noteColor'];
-			$id = $media_anchor_id."_".$member_id;
+			$id = $media_anchor_image_id."_".$member_id;
 			if($row['anchor_class_id']){
 			
 			$class_name = $row['anchor_class_name'];
@@ -115,18 +115,18 @@ if($button_type=="image"){
 			}
 			if($noteColor==0){
 			
-				echo "<div id='$media_anchor_id' class='Note' name='未分類'>
+				echo "<div id='$media_anchor_image_id' class='Note' name='未分類'>
 					<div name='$class_name' class='select_edit'><table><tr><td style='width:135px;'><div name='$anchor_class_id' class='select_class' >$class_name</div><td style='width:16px;'><td></tr></table></div>
-					<div  style='border-top:1px solid;cursor:pointer;width: 155px;' id='$media_anchor_id' class='descript_edit'>
+					<div  style='border-top:1px solid;cursor:pointer;width: 155px;' id='$media_anchor_image_id' class='descript_edit'>
 						<div class='note_descript'>$anchor_descript</div>
 						
 					</div>
 				</div>";
 				
 			}else{
-				echo "<div id='$media_anchor_id' class='Note_other' name='未分類'>
+				echo "<div id='$media_anchor_image_id' class='Note_other' name='未分類'>
 					<div name='$class_name' class='select_edit'><table><tr><td style='width:135px;'><div name='$anchor_class_id' class='select_class' >$class_name</div><td style='width:16px;'><img id='del_note' style='width:16px;'src='./images/cancel.png';></img><td></tr></table></div>
-					<div  style='border-top:1px solid;cursor:pointer;width: 155px;' id='$media_anchor_id' class='descript_edit'>
+					<div  style='border-top:1px solid;cursor:pointer;width: 155px;' id='$media_anchor_image_id' class='descript_edit'>
 						<div class='descript'>$anchor_descript</div>
 						<div id='descript_textarea' style='display:none;'><textarea class='descript' cols='15' rows='6'>$anchor_descript</textarea><button id='note_change'>確定</button><button id='note_cancel'>取消</button></div>
 					</div>

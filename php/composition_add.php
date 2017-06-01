@@ -1,12 +1,17 @@
 <?php
+//選擇欲使用的組織方式後，會顯示的畫面
 include_once("root.php");
 $composition = mysql_escape_string($_POST['composition']);
 $member_id = mysql_escape_string($_POST['member_id']);
 
+echo"	<div class='content' id='content'>
+        <div class='Tit'><img src='images/test/pic-Tit.png'/>
+            <a href='index.php' title='個人書房'>個人書房</a> >> <a href='#' title='統整'>統整</a> >> ";
 
 switch($composition){
 	case "list":
 		echo"
+		<a href='#' title='list'>清單</a></div>
 		<div id='contentR'>
 			<div id='Edit' class='list'>
 				<ul>
@@ -60,6 +65,7 @@ switch($composition){
 	break;
 	case "sequence":
 		echo"
+		<a href='#' title='sequence'>次序</a></div>
 		<div id='contentR'>
 			<div id='Edit' class='sequence'>
 				<ol>
@@ -112,7 +118,9 @@ switch($composition){
 		
 	break;
 	case "hie":
-	echo"<div id='contentR'>
+	echo"
+	<a href='#' title='hie'>階層</a></div>
+	<div id='contentR'>
 			<div id='Edit' class='hie'>
 				<ul id='org' style='display:none'>
 					<li>
@@ -171,7 +179,9 @@ switch($composition){
 		echo"</div>";
 	break;
 	case "mesh":
-	echo"<div id='contentR'>
+	echo"
+	<a href='#' title='mesh'>網狀</a></div>
+	<div id='contentR'>
 			<div style='position:absolute;'>
 				<button id='add_new' class='mesh' style='font-family:微軟正黑體;font-size:20px;font-weight:bold;'>新增節點</button><br/>
 				<button id='add_line' class='mesh' style='font-family:微軟正黑體;font-size:20px;font-weight:bold;'>新增連線</button><br/>

@@ -34,10 +34,10 @@
 /* Vertical menu that slides from the left or right */
 
 .cbp-spmenu-right {
-	right: -240px;
+	right: -25%;
 }
 .cbp-spmenu-right.cbp-spmenu-open {
-	right: 0px;
+	right: 0%;
 }
 
 
@@ -70,7 +70,7 @@
 
 }
 
-@media screen and (max-height: 26.375em){
+/*@media screen and (max-height: 26.375em){
 
 	.cbp-spmenu-vertical {
 		font-size: 90%;
@@ -89,4 +89,4 @@
 	.cbp-spmenu-push-toright {
 		left: 190px;
 	}
-}
+}*/
