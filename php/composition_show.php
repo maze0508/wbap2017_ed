@@ -108,28 +108,9 @@ switch($composition_type){
 	break;
 	case "hie":
 		echo"<div id='Edit' class='hie' name='$compos_book_id'>";
-		function tree($parent_id,$compos_book_id) {
 			
-			//echo"$parent_id";
-			if($parent_id=='0'){
-				echo "<ul id='org' style='display:none;'>";
-			}else{
-				echo "<ul>";
-			}
-			global $mysqli;
-			$query="SELECT media_anchor_image.image,media_anchor_image.anchor_descript,compos_hie_id,compos_hie.media_anchor_image_id FROM compos_hie LEFT JOIN media_anchor_image ON compos_hie.media_anchor_image_id = media_anchor_image .media_anchor_image_id  WHERE compos_book_id ='68' ORDER BY compos_hie_id";
-			$result = $mysqli->query($query);
-			while($row = $result->fetch_array(MYSQL_ASSOC)){
-				$compos_hie_id = $row['compos_hie_id'];
-				$media_anchor_image_id = $row['media_anchor_image_id'];
-				$image = $row['image'];
-				$anchor_descript = $row['anchor_descript'];
-				if($image){
-					$image_url = "./images/anchor/$image";
-				}else{
-					$image_url = "";
-				}
-				echo"<li>
+			function tree($compos_hie_id,$compos_book_id,$media_anchor_image_id,$image_url,$anchor_descript) {
+				echo"<ul><li>
 						<table id='$compos_hie_id' class='composition' style='width:155px;border:1px solid;margin:auto;'>
 							<tr>
 								<td class='image'>
@@ -148,15 +129,54 @@ switch($composition_type){
 								</td>
 							</tr>
 						</table>";
-					
-			/* 遞歸調用 */ 
+			}
 			
-				//tree($compos_hie_id,$compos_book_id);
-				echo(" </li>"); 
+			global $mysqli;
+			$query="SELECT media_anchor_image.image,media_anchor_image.anchor_descript,compos_hie_id,compos_hie.media_anchor_image_id FROM compos_hie LEFT JOIN media_anchor_image ON compos_hie.media_anchor_image_id = media_anchor_image .media_anchor_image_id  WHERE compos_book_id ='68' ORDER BY compos_hie_id";
+			$result = $mysqli->query($query);
+			$count = 0;
+			while($row = $result->fetch_array(MYSQL_ASSOC)){
+				$compos_hie_id = $row['compos_hie_id'];
+				$media_anchor_image_id = $row['media_anchor_image_id'];
+				$image = $row['image'];
+				$anchor_descript = $row['anchor_descript'];
+				if($image){
+					$image_url = "./images/anchor/$image";
+				}else{
+					$image_url = "";
+				}
+				if($count==0){
+				echo"<ul id='org' style='display:none;'>
+					<li>
+					<table id='$compos_hie_id' class='composition' style='width:155px;border:1px solid;margin:auto;'>
+								<tr>
+									<td class='image'>
+										<div><img class='del_child' style='width:10px;cursor:pointer;'src='./images/cancel.png';></img></div>
+										<div id='image_$compos_hie_id' class='image_choose' style='width:145px;height:109px;border:1px solid;'><img id='$media_anchor_image_id' class='image_url' style='width:145px;' src='$image_url'/></div>
+									</td>
+								</tr>
+								<tr>
+									<td class='descript'>
+										<div id='descript_$compos_hie_id' class='descript_choose' style='border-bottom:1px solid;height:30px;cursor:pointer;width:145px;'><div id='$media_anchor_image_id' class='descript_text'>$anchor_descript</div></div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<button class='add_child' style='border:1px solid #666;font-size:10px;font-weight:bold;'>add</button><br/>
+									</td>
+								</tr>
+							</table>";
+				}else{
+					tree($compos_hie_id,$compos_book_id,$media_anchor_image_id,$image_url,$anchor_descript);
+				}
+				$count+=1;
 			} 
-			echo("</ul>"); 
-		} 
-		tree('0',$compos_book_id);
+			while($count==0){
+				echo("</li></ul>"); 			
+				$count-=1;
+			}
+		
+		echo("</li></ul>"); 
 		echo "</div>
 			<div>
 			<div align=center>

@@ -98,8 +98,7 @@ $(function(){
 				$('#show_book').html(data);
 				composition=$('div#Edit').attr("class");
 				if(composition=='hie'){
-					$("#org").jOrgChart({
-					});
+					$("#org").jOrgChart({container: $("#Edit"), interactive: true});
 				}
 				if(composition=='mesh'){
 					var Edit_ar= new Array();

@@ -2,7 +2,7 @@
 
 
 .cbp-spmenu {
-	background-color: rgb(135,189,200);
+	background-color:#95CFFF;
 	position: fixed;
 }
 
@@ -12,7 +12,7 @@
 	padding: 20px;
 	margin: 0;
 	font-weight: 300;
-	background-color: rgb(135,189,200);
+	background-color:#95CFFF;
 }
 
 /* Orientation-dependent styles for the content of the menu */
@@ -26,7 +26,7 @@
 }
 
 .cbp-spmenu-vertical a {
-	border-bottom: 1px solid #258ecd;
+	
 	padding: 1em;
 }
 

@@ -1,314 +1,218 @@
 /**
- * jQuery org-chart/tree plugin.
+ * JQuery Organisation Chart Plugin.
  *
- * Author: Wes Nolte
- * http://twitter.com/wesnolte
+ * Author: Mark Lee
+ * Copyright (C)2013-2015 Caprica Software Limited
+ * http://www.capricasoftware.co.uk
  *
- * Based on the work of Mark Lee
- * http://www.capricasoftware.co.uk 
+ * Contributions by: Paul Lautman <paul.lautman at gmail.com>
  *
- * Copyright (c) 2011 Wesley Nolte
- * Dual licensed under the MIT and GPL licenses.
+ * This software is licensed under the Creative Commons Attribution-ShareAlike 3.0 License,
+ * see here for license terms:
  *
+ *     http://creativecommons.org/licenses/by-sa/3.0
  */
 (function($) {
 
-  $.fn.jOrgChart = function(options) {
-    var opts = $.extend({}, $.fn.jOrgChart.defaults, options);
-    var $appendTo = $(opts.chartElement);
+    $.fn.jOrgChart = function(options) {
+        var opts = $.extend({}, $.fn.jOrgChart.defaults, options);
 
-    // build the tree
-    $this = $(this);
-    var $container = $("<div class='" + opts.chartClass + "'/>");
-    if($this.is("ul")) {
-      buildNode($this.find("li:first"), $container, 0, opts);
-    }
-    else if($this.is("li")) {
-      buildNode($this, $container, 0, opts);
-    }
-    $appendTo.append($container);
-
-    /*// add drag and drop if enabled
-    if(opts.dragAndDrop){
-        $('div.node').draggable({
-            cursor      : 'move',
-            distance    : 40,
-            helper      : 'clone',
-            opacity     : 0.8,
-            revert      : 'invalid',
-            revertDuration : 100,
-            snap        : 'div.node.expanded',
-            snapMode    : 'inner',
-            stack       : 'div.node'
-        });
-        
-        $('div.node').droppable({
-            accept      : '.node',          
-            activeClass : 'drag-active',
-            hoverClass  : 'drop-hover'
-        });
-        
-      // Drag start event handler for nodes
-      $('div.node').bind("dragstart", function handleDragStart( event, ui ){
-        
-        var sourceNode = $(this);
-        sourceNode.parentsUntil('.node-container')
-                   .find('*')
-                   .filter('.node')
-                   .droppable('disable');
-      });
-
-      // Drag stop event handler for nodes
-      $('div.node').bind("dragstop", function handleDragStop( event, ui ){
-		
-        // reload the plugin 
-        $(opts.chartElement).children().remove();
-        $this.jOrgChart(opts);      
-      });
-    
-      // Drop event handler for nodes
-      $('div.node').bind("drop", function handleDropEvent( event, ui ) {    
-	  
-        var targetID = $(this).data("tree-node");
-        var targetLi = $this.find("li").filter(function() { return $(this).data("tree-node") === targetID; } );
-        var targetUl = targetLi.children('ul');
-		
-        var sourceID = ui.draggable.data("tree-node");		
-        var sourceLi = $this.find("li").filter(function() { return $(this).data("tree-node") === sourceID; } );		
-        var sourceUl = sourceLi.parent('ul');
-
-        if (targetUl.length > 0){
-  		    targetUl.append(sourceLi);
-        } else {
-  		    targetLi.append("<ul></ul>");
-  		    targetLi.children('ul').append(sourceLi);
-        }
-        
-        //Removes any empty lists
-        if (sourceUl.children().length === 0){
-          sourceUl.remove();
-        }
-		
-      }); // handleDropEvent
-        
-    } // Drag and drop*/
-  };
-
-  // Option defaults
-  $.fn.jOrgChart.defaults = {
-    chartElement : '#Edit',
-    depth      : -1,
-    chartClass : "jOrgChart",
-    dragAndDrop: true
-  };
-	
-  var nodeCount = 0;
-  // Method that recursively builds the tree
-  function buildNode($node, $appendTo, level, opts) {
-    var $table = $("<table cellpadding='0' cellspacing='0' border='0'/>");
-    var $tbody = $("<tbody/>");
-
-    // Construct the node container(s)
-    var $nodeRow = $("<tr/>").addClass("node-cells");
-    var $nodeCell = $("<td/>").addClass("node-cell").attr("colspan", 2);
-    var $childNodes = $node.children("ul:first");
-    var $nodeDiv;
-    
-    if($childNodes.length > 1) {
-
-      $nodeCell.attr("colspan", $childNodes.length * 2);
-    }
-    // Draw the node
-    // Get the contents - any markup except li and ul allowed
-    var $nodeContent = $node.clone()
-                            .children("li")
-                            .remove()
-                            .end()
-                            .html();
-	
-      //Increaments the node count which is used to link the source list and the org chart
-  	nodeCount++;
-  	$node.data("tree-node", nodeCount);
-  	$nodeDiv = $("<div>").addClass("node")
-                                     .data("tree-node", nodeCount)
-                                     .append($nodeContent);
-
-    // Expand and contract nodes
-    /*if ($childNodes.length > 0) {
-      $nodeDiv.click(function() {
-          var $this = $(this);
-          var $tr = $this.closest("tr");
-
-          if($tr.hasClass('contracted')){
-            $this.css('cursor','n-resize');
-            $tr.removeClass('contracted').addClass('expanded');
-            $tr.nextAll("tr").css('visibility', '');
-
-            // Update the <li> appropriately so that if the tree redraws collapsed/non-collapsed nodes
-            // maintain their appearance
-            $node.removeClass('collapsed');
-          }else{
-            $this.css('cursor','s-resize');
-            $tr.removeClass('expanded').addClass('contracted');
-            $tr.nextAll("tr").css('visibility', 'hidden');
-
-            $node.addClass('collapsed');
-          }
-        });
-    }*/
-    
-    $nodeCell.append($nodeDiv);
-    $nodeRow.append($nodeCell);
-    $tbody.append($nodeRow);
-
-    if($childNodes.length > 0) {
-      // if it can be expanded then change the cursor
-      $nodeDiv.css('cursor','n-resize');
-    
-      // recurse until leaves found (-1) or to the level specified
-      if(opts.depth == -1 || (level+1 < opts.depth)) { 
-        var $downLineRow = $("<tr/>");
-        var $downLineCell = $("<td/>").attr("colspan", $childNodes.length*2);
-        $downLineRow.append($downLineCell);
-        
-        // draw the connecting line from the parent node to the horizontal line 
-        $downLine = $("<div></div>").addClass("line down");
-        $downLineCell.append($downLine);
-        $tbody.append($downLineRow);
-
-        // Draw the horizontal lines
-        var $linesRow = $("<tr/>");
-        $childNodes.each(function() {
-          var $left = $("<td>&nbsp;</td>").addClass("line left top");
-          var $right = $("<td>&nbsp;</td>").addClass("line right top");
-          $linesRow.append($left).append($right);
-        });
-
-        // horizontal line shouldn't extend beyond the first and last child branches
-        $linesRow.find("td:first")
-                    .removeClass("top")
-                 .end()
-                 .find("td:last")
-                    .removeClass("top");
-
-        $tbody.append($linesRow);
-        var $childNodesRow = $("<tr/>");
-        $childNodes.each(function() {
-           var $td = $("<td class='node-container'/>");
-           $td.attr("colspan", 2);
-           // recurse through children lists and items
-           buildNode($(this), $td, level+1, opts);
-           $childNodesRow.append($td);
-        });
-
-      }
-      $tbody.append($childNodesRow);
-    }
-
-    // any classes on the LI element get copied to the relevant node in the tree
-    // apart from the special 'collapsed' class, which collapses the sub-tree at this point
-    if ($node.attr('class') != undefined) {
-        var classList = $node.attr('class').split(/\s+/);
-        $.each(classList, function(index,item) {
-            if (item == 'collapsed') {
-                console.log($node);
-                $nodeRow.nextAll('tr').css('visibility', 'hidden');
-                    $nodeRow.removeClass('expanded');
-                    $nodeRow.addClass('contracted');
-                    $nodeDiv.css('cursor','s-resize');
-            } else {
-                $nodeDiv.addClass(item);
+        return this.each(function() {
+            var $chartSource = $(this);
+            // Clone the source list hierarchy so levels can be non-destructively removed if needed
+            // before creating the chart
+            $this = $chartSource.clone();
+            if (opts.levels > -1) {
+                $this.find("ul").andSelf().filter(function() {return $chartSource.parents("ul").length+1 > opts.levels;}).remove();
+            }
+            // Store the original element
+            $this.data("chart-source", $chartSource);
+            // Build the chart...
+            var $container = $("<div class='" + opts.chartClass + "'/>");
+            if (opts.interactive) {
+                $container.addClass("interactive");
+            }
+            // The chart may be sourced from either a "ul", or an "li" element...
+            var $root;
+            if ($this.is("ul")) {
+                $root = $this.find("li:first");
+            }
+            else if ($this.is("li")) {
+                $root = $this;
+            }
+            if ($root) {
+                buildNode($root, $container, 0, 0, opts);
+                // Special case for any hyperlink anchor in the chart to prevent the click on the node itself from propagating
+                $container.find("div.node a").click(function(evt) {
+                    evt.stopImmediatePropagation();
+                });
+                if(opts.replace) {
+                    opts.container.empty();
+                }
+                opts.container.append($container);
             }
         });
-    }
+    };
 
-    $table.append($tbody);
-    $appendTo.append($table);
-    
-    /* Prevent trees collapsing if a link inside a node is clicked 
-    $nodeDiv.find('a').click(function(e){
-        console.log(e);
-        e.stopPropagation();
-    });*/
-	/*$nodeDiv.find('button[class=add_child]').click(function(e){
-				//console.log(e);
-				//e.stopPropagation();
-				//alert('hie ok');
-				var composition='hie';
-				var parent_id=$(this).parents('table').attr('id');
-				var parent_arr=parent_id.split("_");
-				var child_index=$('table#'+parent_id).siblings('ul').children('li').size();
+    $.fn.jOrgChart.defaults = {
+        container  : "#Edit",
+        depth      : -1,
+        levels     : -1,
+        showLevels : -1,
+        stack      : false,
+        chartClass : "jOrgChart",
+        hoverClass : "hover",
+        nodeText   : function($node) {return $node.clone().children("ul,li").remove().end().html();},
+        interactive: false,
+        fade       : false,
+        speed      : "slow",
+        nodeClicked: function($node) {},
+        copyClasses: true,
+        copyData   : true,
+        copyStyles : true,
+        copyTitle  : true,
+        replace    : true
+    };
 
-				if(child_index==0){
-					//index=parent_arr[1]+"_"+parseInt($('table[id*=]'))
-					index="1_"+parent_id;
-				}else{
-					var last_id=$('table#'+parent_id).siblings('ul').find('table[class*=composition]:last').attr('id');
-					var last_arr=last_id.split("_");
-					//alert(last_arr);
-					//alert(end(last_arr));
-					index=(parseInt(last_arr[0])+1)+"_"+parent_id;
-					//alert(index);
-				}
-				$.post("php/composition_add_new.php",{composition:composition,index:index},
-				function(data) {
+    function buildNode($node, $appendTo, level, index, opts) {
+        var $table = $("<table cellpadding='0' cellspacing='0' border='0'/>");
+        var $tbody = $("<tbody/>");
 
-					var $new_child ;
-					var $id="li table[id="+parent_id+"]";
-					
-					if(child_index > 0){
-						$new_child = data;
-						$($id).next('ul').append($new_child);
-					}else{
-						$new_child = '<ul>'+data+'</ul>';
-						$($id).after($new_child);
-					}
-					$('div.jOrgChart').remove();
-					$("#org").jOrgChart({			
-					});
-				
-			});
-				$('div.jOrgChart').remove();
-				 $("#org").jOrgChart({
-            //chartElement : '#chart',
-            //dragAndDrop  : true
-			
-				});
-			});
-	$nodeDiv.find('img[class=del_child]').click(function(e){
-				console.log(e);
-				e.stopPropagation();
-				var $new_child ;
-				var $id="li table[id="+$(this).parents('table').attr('id')+"]";
-				
-				if($($id).attr('class')!='composition_new'){
-					$($($id).parent('li').find('table[class*=composition]')).each(function(index_new){
-						if($(this).attr('class')!='composition_new'){
-							del_child.push($(this).parents('table').attr('id'));
-							}
-					})
-				
-				}	
-				$($id).parent('li').remove();
-				
-				//alert("remove ok");
-				$('div.jOrgChart').remove();
-				 $("#org").jOrgChart({
-            //chartElement : '#chart',
-            //dragAndDrop  : true
-			
-				});
-			});*/
-	/*$nodeDiv.find('img[class*=image_new]').click(function(e){
-        console.log(e);
-        e.stopPropagation();
-    });
-	$nodeDiv.find('div[class*=descript_new]').click(function(e){
-        console.log(e);
-        e.stopPropagation();
-    });*/
+        // Make this node...
+        var $nodeRow = $("<tr/>").addClass("nodes");
+        var $nodeCell = $("<td/>").addClass("node").attr("colspan", 2);
+        var $childNodes = $node.children("ul:first").children("li");
+        if ($childNodes.length > 1) {
+            $nodeCell.attr("colspan", $childNodes.length*2);
+        }
 
-  };
+        var $adjunct = $node.children("adjunct").eq(0);
+        if ($adjunct.length > 0) {
+            var $adjunctDiv = $("<div>").addClass("adjunct node").addClass("level"+level).addClass("node"+index).addClass("level"+level+"-node"+index).append(opts.nodeText($adjunct));
+            $adjunctDiv.appendTo($nodeCell);
+            var $linkDiv = $("<div>").addClass("adjunct-link");
+            $linkDiv.appendTo($nodeCell);
+            $adjunct.remove();
+        }
+
+        var $heading = $("<h2>").html(opts.nodeText($node));
+        var $nodeDiv = $("<div>").addClass("node").addClass("level"+level).addClass("node"+index).addClass("level"+level+"-node"+index).append($heading);
+
+        // Copy classes from the source list to the chart node
+        if (opts.copyClasses) {
+            $nodeDiv.addClass($node.attr("class"));
+        }
+
+        // Copy data from the source list to the chart node
+        if (opts.copyData) {
+            $nodeDiv.data($node.data());
+        }
+
+        // Copy CSS styles from the source list to the chart node
+        if (opts.copyStyles) {
+            $nodeDiv.attr("style", $node.attr("style"));
+        }
+
+        // Copy the title attribute from the source list to the chart node
+        if (opts.copyTitle) {
+            $nodeDiv.attr("title", $node.attr("title"));
+        }
+
+        $nodeDiv.data("jOrgChart-level", level).data("jOrgChart-node", $node);
+
+        $nodeCell.append($nodeDiv);
+        $nodeRow.append($nodeCell);
+        $tbody.append($nodeRow);
+		//顯示隱藏node
+        $nodeDiv.click(function() {
+            var $this = $(this);
+            opts.nodeClicked($this.data("jOrgChart-node"), $this);
+            if (opts.interactive) {
+                var $row = $this.closest("tr");
+                if ($row.next("tr").is(":visible")) {
+                    if (opts.fade) {
+                        $row.nextAll("tr").fadeOut(opts.speed);
+                    }
+                    else {
+                        $row.nextAll("tr").hide();
+                    }
+                    $this.removeClass("shownChildren").addClass("hiddenChildren");
+                }
+                else {
+                    $this.removeClass("hiddenChildren").addClass("shownChildren");
+                    if (opts.fade) {
+                        $row.nextAll("tr").fadeIn(opts.speed);
+                    }
+                    else {
+                        $row.nextAll("tr").show();
+                    }
+                }
+            }
+        });
+		//結束顯示隱藏node
+        if ($childNodes.length > 0) {
+            if (opts.depth == -1 || level+1 < opts.depth) {
+                var $downLineRow = $("<tr/>").addClass("lines");
+                var $downLineCell = $("<td/>").attr("colspan", $childNodes.length*2);
+                $downLineRow.append($downLineCell);
+
+                var $downLineTable = $("<table cellpadding='0' cellspacing='0' border='0'>");
+                $downLineTable.append("<tbody>");
+                var $downLineLine = $("<tr/>").addClass("lines x");
+                var $downLeft = $("<td>").addClass("line left");
+                var $downRight = $("<td>").addClass("line right");
+                $downLineLine.append($downLeft).append($downRight);
+                $downLineTable.children("tbody").append($downLineLine);
+                $downLineCell.append($downLineTable);
+
+                $tbody.append($downLineRow);
+				//隱藏顯示
+                if ($childNodes.length > 0) {
+                    $nodeDiv.addClass("hasChildren");
+                    if (opts.showLevels == -1 || level < opts.showLevels-1) {
+                        $nodeDiv.addClass("shownChildren");
+                    }
+                    else {
+                        $nodeDiv.addClass("hiddenChildren");
+                    }
+                    if (opts.interactive) {
+                        $nodeDiv.hover(function() {$(this).addClass(opts.hoverClass);}, function() {$(this).removeClass(opts.hoverClass)});
+                    }
+                }
+
+                // Recursively make child nodes...
+                var $linesRow = $("<tr/>").addClass("lines v");
+                $childNodes.each(function() {
+                    var $left = $("<td/>").addClass("line left top");
+                    var $right = $("<td/>").addClass("line right top");
+                    $linesRow.append($left).append($right);
+                });
+                $linesRow.find("td:first").removeClass("top");
+                $linesRow.find("td:last").removeClass("top");
+                $tbody.append($linesRow);
+                var $childNodesRow = $("<tr/>");
+                $childNodes.each(function(index) {
+                    var $td = $("<td/>");
+                    $td.attr("colspan", 2);
+                    buildNode($(this), $td, level+1, index, opts);
+                    $childNodesRow.append($td);
+                });
+                $tbody.append($childNodesRow);
+            }
+            else if (opts.stack) {
+                var $stackNodes = $childNodes.clone();
+                var $list = $("<ul class='stack'>").append($stackNodes).addClass("level"+level).addClass("node"+index).addClass("level"+level+"-node"+index);
+                var $stackContainer = $("<div class='stack-container'>").append($list);
+                $nodeDiv.after($stackContainer);
+            }
+        }
+
+        if (opts.showLevels > -1 && level >= opts.showLevels-1) {
+            $nodeRow.nextAll("tr").hide();
+        }
+
+        $table.append($tbody);
+        $appendTo.append($table);
+    };
 
 })(jQuery);
-

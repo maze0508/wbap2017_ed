@@ -12,7 +12,7 @@ if($_POST['anchor_class_id']){
 	if($anchor_class_id=="all_class"){
 		$anchor_class_id='';
 		echo"<div id=$anchor_class_id class='class_anchor'>";
-		$query="select member.name,media_anchor_image.media_anchor_image_id,media_anchor_image.image,media_anchor_image.anchor_descript,media_anchor_image.noteColor,media_anchor_image.anchor_time,anchor_class.anchor_class_id,anchor_class.anchor_class_name  from member left join media_anchor_image on member.member_id =  media_anchor_image.member_id LEFT JOIN anchor_class ON media_anchor_image.anchor_class_id= anchor_class.anchor_class_id where media_anchor_image.user_media_id = '$user_media_id' AND media_anchor_image.member_id = '$member_id'  order by media_anchor_image.anchor_time";
+		$query="select member.name,media_anchor_image.media_anchor_image_id,media_anchor_image.image,media_anchor_image.anchor_descript,media_anchor_image.noteColor,media_anchor_image.anchor_time,anchor_class.anchor_class_id,anchor_class.anchor_class_name  from member left join media_anchor_image on member.member_id =  media_anchor_image.member_id LEFT JOIN anchor_class ON media_anchor_image.anchor_class_id= anchor_class.anchor_class_id where media_anchor_image.member_id = '$member_id'  order by media_anchor_image.anchor_time";
 		$result = $mysqli->query($query);
 		while($row = $result->fetch_array(MYSQL_ASSOC)){
 			$anchor_class_id = $row['anchor_class_id'];

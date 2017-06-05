@@ -53,12 +53,10 @@ code {
 p {
 	margin: 0 0 5px 110px;
 	}
-
 .handle {
 	position: absolute;
 	cursor: move;
 	}
-
 .bar {
 	background: #AAD;
 	}
@@ -84,8 +82,6 @@ h1 {
 	text-indent: 110px;
 	cursor: pointer;
 	}
-
-
 </style>
 </head>
 <body>
@@ -158,7 +154,6 @@ $(function(){
 		}else{
 			index_new=$('table').filter('.composition_new').size();
 			index_edit=$('table').filter('.composition_edit').size();
-
 		}
 		
 		if(compos_book_id==null){
@@ -185,7 +180,6 @@ $(function(){
 									var Edit_x=Edit.left;
 									var Edit_y=Edit.top;
 								$('table.composition_new').each(function(index_new){
-
 									node[index_new] = new Array();
 									node[index_new][0]=$(this).find('.descript_text').attr('id');
 									node[index_new][1]=$(this).find('.image_url').attr('id');
@@ -242,7 +236,6 @@ $(function(){
 									var Edit_x=Edit.left;
 									var Edit_y=Edit.top;
 								$('table.composition_new').each(function(index_new){
-
 									node[index_new] = new Array();
 									node[index_new][0]=$(this).find('.descript_text').attr('id');
 									node[index_new][1]=$(this).find('.image_url').attr('id');
@@ -298,7 +291,6 @@ $(function(){
 						compos_id[index_edit]=$(this).attr('id');*/
 					})
 				}
-
 				}
 				
 				
@@ -316,18 +308,16 @@ $(function(){
 	}
 	function show(compos_book_id,member_id){
 		//筆記本顯示
-
 			var Edit_ar= new Array();
 			var Edit=$('#Edit').offset();//每台電腦不同的位置
 			Edit_ar[0]=Edit.left;
 			Edit_ar[1]=Edit.top;
-
 		$.post("php/composition_show.php",{Edit_ar:Edit_ar,compos_book_id:compos_book_id,member_id:member_id},
 			function(data) {
 				$('div#contentR').html(data);
 				composition=$('div#Edit').attr("class");
 				if(composition=='hie'){
-					$("#org").jOrgChart({
+					$("#org").jOrgChart({container: $("#Edit"), interactive: true
 					});
 				}
 				if(composition=='mesh'){
@@ -362,7 +352,7 @@ $(function(){
 				$('div#page').html(data);
 				$('#contentR').css('background-image',"url('images/test/bak-"+composition+"2.png')")
 				if(composition=='hie'){
-						$("#org").jOrgChart({
+						$("#org").jOrgChart({container: $("#Edit"), interactive: true
 						});
 				}
 			});
@@ -372,7 +362,6 @@ $(function(){
 	//alert('composition');
 		
 		composition=$(this).attr("id");
-
 		add_book(member_id,composition);
 	})
 	
@@ -381,7 +370,6 @@ $(function(){
 		
 		var composition2=$(this).attr("id");
 		var leave=confirm ("是否離開此頁面?");
-
 		if(leave){
 				composition=composition2;
 				add_book(member_id,composition);
@@ -390,7 +378,6 @@ $(function(){
 		
 		
 	})
-
 	
 	$('img#toolbaox').live("click",function(){
 		$('#toolbaox2').show();
@@ -400,7 +387,6 @@ $(function(){
 		$('img#toolbaox').show();
 		$('#toolbaox2').hide();
 	})
-
 /*圖片&文字註記選單start*/
 	$('.image_choose').live("click",function(){
 		
@@ -460,7 +446,6 @@ $(function(){
 		var thisid="div#"+$(this).parents('div.all_useranchor').siblings('div.image_choose').attr('id');
 		var image_url=$(this).attr('src');
 		var image_id=$(this).attr('id');
-
 		
 		$(thisid).children('img.image_url').attr('src',image_url);
 		$(thisid).children('img.image_url').attr('id',image_id);
@@ -473,7 +458,6 @@ $(function(){
 	$('div.descript_new').live("click",function(){
 		var thisid="div#"+$(this).parents('div.all_useranchor').siblings('div.descript_choose').attr('id');
 		var descript_text="<div id="+$(this).attr('id')+" class='descript_text'>"+$(this).text()+"</div>";
-
 		$(thisid).html(descript_text);
 		if($(thisid).parents('table[class*=composition]').attr('class')!="composition_new"){
 			$(thisid).parents('table[class*=composition]').attr('class','composition_edit')
@@ -490,16 +474,13 @@ $(function(){
 		var compos_book_id=$(this).val();
 		show(compos_book_id,member_id);
 		book_name=$('select#compos_book_select :selected').text();
-
 	 });
 	$('#add_new').live("click",function(){
-
 		var index;
 		index=parseInt($('table[class*=composition]:last').attr('id'))+1;
 		if(isNaN(index)){
 			index='1';
 		}
-
 		$.post("php/composition_add_new.php",{composition:composition,index:index},
 			function(data) {
 				if(composition=='list')
@@ -511,12 +492,10 @@ $(function(){
 			});
 	})
 	$('.add_child').live("click",function(){
-
 		var composition='hie';
 		var parent_id=$(this).parents('table').attr('id');
 		var parent_arr=parent_id.split("_");
 		var child_index=$('table#'+parent_id).siblings('ul').children('li').size();
-
 		if(child_index==0){
 			index="1_"+parent_id;
 			}else{
@@ -526,7 +505,6 @@ $(function(){
 			}
 			$.post("php/composition_add_new.php",{composition:composition,index:index},
 			function(data) {
-
 					var $new_child ;
 					var $id="li table[id="+parent_id+"]";
 					
@@ -538,12 +516,12 @@ $(function(){
 						$($id).after($new_child);
 					}
 					$('div.jOrgChart').remove();
-					$("#org").jOrgChart({			
+					$("#org").jOrgChart({container: $("#Edit"), interactive: true			
 					});
 				
 			});
 				$('div.jOrgChart').remove();
-				 $("#org").jOrgChart({
+				 $("#org").jOrgChart({container: $("#Edit"), interactive: true
             //chartElement : '#chart',
             //dragAndDrop  : true
 			
@@ -557,13 +535,11 @@ $(function(){
 				function(data) {
 					alert(data);
 					add_book(member_id,composition);
-
 			});
 		}
 	})
 	
 	$('.del_child').live("click",function(){
-
 		var $id="li table[id="+$(this).parents('table').attr('id')+"]";
 		if($($id).attr('class')!='composition_new'){
 			$($($id).parent('li').find('table[class*=composition]')).each(function(index_new){
@@ -574,11 +550,10 @@ $(function(){
 		}	
 		$($id).parent('li').remove();
 		$('div.jOrgChart').remove();
-		$("#org").jOrgChart({
+		$("#org").jOrgChart({container: $("#Edit"), interactive: true
 		});
 	})
 	$('.del_new').live("click",function(){
-
 		if(composition=='mesh'){
 			var node_id=$(this).parents('table').attr('id');
 			$("canvas[id*="+node_id+"]").each(function(index){
@@ -600,11 +575,9 @@ $(function(){
 			}
 			$(this).parents('table').remove();
 		}
-
 		//alert(del_child[0]);
 	})
 	$('#clean').live("click",function(){
-
 		var book_id = $('div#Edit').attr('name');
 		if(book_id){
 		$.post("php/composition_del.php",{composition:composition,book_id:book_id},
@@ -624,7 +597,7 @@ $(function(){
 				if(composition=='hie'){
 					$('div#Edit ul').html(data);
 					$('div.jOrgChart').remove();
-					$("#org").jOrgChart({
+					$("#org").jOrgChart({container: $("#Edit"), interactive: true
 					});
 				}
 				if(composition=='mesh'){
@@ -651,10 +624,8 @@ $(function(){
 		save(composition,member_id);
 		del_child=[];
 		del_line=[];
-
 	})
 	$('img.Select').live("click",function(){
-
 		var select_sum=$('div.Select').length;
 		//alert($(this).parents('div.Select').length);
 		if($(this).parents('div.Select').length){
@@ -670,7 +641,6 @@ $(function(){
 		}
 	})
 	$(".handle").live("mouseover",function(){
-
 		var id="div#"+$(this).parents('table').attr('id');
 		$(id)
 		.bind('dragstart',function( event ){
@@ -684,17 +654,13 @@ $(function(){
 				$(this).children('table[class=composition]').attr('class','composition_edit');
                 });
 	});
-
 	$("#add_line").live("click",function(){
-
 		//新增連線
 		var x= new Array();
 		var y= new Array();
 		var point_id= new Array();
-
 		
 		if($("div.Select").length==2){
-
 			$("div.Select").each(function(index){
 				var point = $(this).offset();
 				x[index]=point.left;
@@ -755,7 +721,6 @@ $(function(){
 			}
 		})
 		del_line.push(point_id);
-
 		var canvas_id0=point_id[0]+"_"+point_id[1];
 		var canvas_id1=point_id[1]+"_"+point_id[0];
 		$('canvas#'+canvas_id0).remove();
@@ -764,7 +729,6 @@ $(function(){
 	})
 	
 });
-
 </script>
 </body>
 </html>

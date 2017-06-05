@@ -6,9 +6,16 @@ Released for free under a Creative Commons Attribution 2.5 License
 
 * {
 	background-repeat: no-repeat;
-	
+	scrollbar-face-color:#95CFFF;
+	scrollbar-highlight-color:#000000;
+	scrollbar-3dlight-color:#FFFFFF;
+	scrollbar-darkshadow-color:#FFFFFF;
+	scrollbar-shadow-color:#FFFFFF;
+	scrollbar-arrow-color:#FFFFFF;
+	scrollbar-track-color:#FFFFFF;
 
 }
+
 
 body {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -232,7 +239,7 @@ ul#menu2 {
 .Tit  img{
 	width: 20px;
 }
-
+/*contentC為註記頁面的內容*/
 #contentC {
 	float: right;
 	width: 900px;
@@ -255,6 +262,7 @@ ul#menu2 {
 	margin-left: 0.15cm;
 	margin-top:0.2cm;
 }
+/*contentR為統整頁面的內容*/
 #contentR {
 	margin:0;
 	float: left;
@@ -307,11 +315,12 @@ ul#menu2 {
 	font-weight: bold;
 	
 }
+/*sidebarR為統整頁面的右側欄*/
 #sidebarR {
 	position:absolute; 
 	float: right;
 	margin-top:0px;
-	right:30%;
+	right:35%;
 	width: 30px;
 }
 
@@ -354,6 +363,7 @@ ul#menu2 {
 	
 	background-color: #8ecbe4;
 }
+/*sidebar為筆記本頁面的右側欄*/
 #sidebar {
 	float: right;
 

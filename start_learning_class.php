@@ -134,9 +134,8 @@ background:#000000;
 	<!-- start content -->
 	<div id="contentC" style='background-color: #f6dfe1; margin-left: 0px; width: 70%; height: 250px;'>
 	<?php
-		//$anchor_class_id="";
 		echo"<div id='' class='class_anchor'>";
-		$query="select member.name,media_anchor_image.media_anchor_image_id,media_anchor_image.image,media_anchor_image.anchor_descript,media_anchor_image.noteColor,media_anchor_image.anchor_time,anchor_class.anchor_class_id,anchor_class.anchor_class_name  from member left join media_anchor_image on member.member_id =  media_anchor_image.member_id LEFT JOIN anchor_class ON media_anchor_image.anchor_class_id= anchor_class.anchor_class_id where media_anchor_image.user_media_id = '$user_media_id' AND media_anchor_image.member_id = '$member_id'  order by media_anchor_image.anchor_time";
+		$query="select member.name,media_anchor_image.media_anchor_image_id,media_anchor_image.image,media_anchor_image.anchor_descript,media_anchor_image.noteColor,media_anchor_image.anchor_time,anchor_class.anchor_class_id,anchor_class.anchor_class_name  from member left join media_anchor_image on member.member_id =  media_anchor_image.member_id LEFT JOIN anchor_class ON media_anchor_image.anchor_class_id= anchor_class.anchor_class_id where media_anchor_image.member_id = '$member_id'  order by media_anchor_image.anchor_time";
 		$result = $mysqli->query($query);
 		while($row = $result->fetch_array(MYSQL_ASSOC)){
 			$anchor_class_id = $row['anchor_class_id'];
@@ -167,16 +166,12 @@ background:#000000;
 					<div  style='border-top:1px solid;cursor:pointer;width: 155px;' id='$media_anchor_image_id' class='descript_edit'>
 						";
 						if($image!=null){
-							/*$enc = mb_detect_encoding($image);
-							$data = mb_convert_encoding($image, "ASCII", $enc);
-							$data = substr($data,1);
-							echo "<p><img class='note_descript' style='width:50%;height:50%;' src='./images/anchor/".$data."'/></p>";
-							*/
 							echo "<p><img class='note_descript' style='width:50%;height:50%;' src='./images/anchor/".$image."'/></p>";
 						}
 						echo"<p>$anchor_descript</p></div>
 				</div>";
-		}
+				?> 
+		<?php }
 		echo"<div id='all_class' class='Note_other' name='未分類'>
 		<div><div>新增註記</div></div>
 			<div  style='border-top:1px solid;cursor:pointer;width: 155px;'>
@@ -395,7 +390,7 @@ $(this).uploadify({
 
 	})
 	
-	$("div.go_class").live("click",function(){
+	$(".go_class").live("click",function(){
 		var anchor_class_id=$(this).attr("id");
 		var bg_color=$(this).parent('td').css('background-color');
 		var button_type="image";

@@ -92,7 +92,7 @@ color:#FFF
 		background:#000000;
 		}
 #showRight{
-	background-color: rgb(187,217,223);
+	background-color: #95CFF2;
 	color: #fff;
 	width: 30px;
 	height: 100%;
@@ -100,6 +100,7 @@ color:#FFF
 	top: 0px;
 	right: 0px;
 }
+
 #note label{
 	color:#69C;	
 }

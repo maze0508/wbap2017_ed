@@ -134,18 +134,28 @@ switch($composition_type){
 	case "hie":
 	
 	echo"<div id='Edit' class='hie' name='$compos_book_id' style='width:70%;float:left;'>";
-		function tree($parent_id,$compos_book_id) { 
-			//echo"$parent_id";
-			if($parent_id=='0'){
-				echo "<ul id='org' style='display:none'>";
-			}else{
-				echo "<ul>";
+		
+			function tree($compos_hie_id,$compos_book_id,$media_anchor_image_id,$image_url,$anchor_descript) {
+				echo"<ul><li>
+						<table id='$compos_hie_id' class='composition' style='width:155px;border:1px solid;margin:auto;'>
+							<tr>
+								<td class='image'>
+									<div id='image_$compos_hie_id' class='image_choose' style='width:145px;height:109px;border:1px solid;'><img id='$media_anchor_image_id' class='image_url' style='width:145px;' src='$image_url'/></div>
+								</td>
+							</tr>
+							<tr>
+								<td class='descript'>
+									<div id='descript_$compos_hie_id' class='descript_choose' style='border-bottom:1px solid;height:30px;cursor:pointer;width:145px;'><div id='$media_anchor_image_id' class='descript_text'>$anchor_descript</div></div>
+								</td>
+							</tr>
+						</table>";
 			}
-			$query="SELECT  media_anchor_image.image,media_anchor_image.anchor_descript,compos_hie.compos_hie_id,compos_hie.media_anchor_image_id FROM compos_hie LEFT JOIN media_anchor_image ON compos_hie.media_anchor_image_id = media_anchor_image .media_anchor_image_id WHERE compos_book_id ='$compos_book_id' AND parent_id='$parent_id'";
+			
 			global $mysqli;
+			$query="SELECT media_anchor_image.image,media_anchor_image.anchor_descript,compos_hie_id,compos_hie.media_anchor_image_id FROM compos_hie LEFT JOIN media_anchor_image ON compos_hie.media_anchor_image_id = media_anchor_image .media_anchor_image_id  WHERE compos_book_id ='68' ORDER BY compos_hie_id";
 			$result = $mysqli->query($query);
-			while($row = $result->fetch_array(MYSQL_ASSOC)) {
-				//$compos_hie_id = "1";
+			$count = 0;
+			while($row = $result->fetch_array(MYSQL_ASSOC)){
 				$compos_hie_id = $row['compos_hie_id'];
 				$media_anchor_image_id = $row['media_anchor_image_id'];
 				$image = $row['image'];
@@ -155,34 +165,32 @@ switch($composition_type){
 				}else{
 					$image_url = "";
 				}
-				echo"<li>
-						<table id='$compos_hie_id' class='composition' style='width:155px;border:1px solid;margin:auto;'>
-							<tr>
-								<td class='image'>
-									<br/>
-									<div id='image_$compos_hie_id' class='image_choose' style='width:145px;height:109px;border:1px solid;'><img id='$media_anchor_image_id' class='image_url' style='width:145px;' src='$image_url'/></div>
-								</td>
-							</tr>
-							<tr>
-								<td class='descript'>
-									<div id='descript_$compos_hie_id' class='descript_choose' style='border-bottom:1px solid;height:30px;width:145px;'><div id='$media_anchor_image_id' class='descript_text'>$anchor_descript</div></div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<br/>
-								</td>
-							</tr>
-						</table>";
-					
-			/* 遞歸調用 */ 
-			
-				//tree($compos_hie_id,$compos_book_id);
-				echo(" </li>"); 
+				if($count==0){
+				echo"<ul id='org' style='display:none;'>
+					<li>
+					<table id='$compos_hie_id' class='composition' style='width:155px;border:1px solid;margin:auto;'>
+								<tr>
+									<td class='image'>
+										<div id='image_$compos_hie_id' class='image_choose' style='width:145px;height:109px;border:1px solid;'><img id='$media_anchor_image_id' class='image_url' style='width:145px;' src='$image_url'/></div>
+									</td>
+								</tr>
+								<tr>
+									<td class='descript'>
+										<div id='descript_$compos_hie_id' class='descript_choose' style='border-bottom:1px solid;height:30px;cursor:pointer;width:145px;'><div id='$media_anchor_image_id' class='descript_text'>$anchor_descript</div></div>
+									</td>
+								</tr>
+							</table>";
+				}else{
+					tree($compos_hie_id,$compos_book_id,$media_anchor_image_id,$image_url,$anchor_descript);
+				}
+				$count+=1;
 			} 
-			echo("</ul>"); 
-		} 
-		tree('0',$compos_book_id);
+			while($count==0){
+				echo("</li></ul>"); 			
+				$count-=1;
+			}
+		
+		echo("</li></ul>"); 
 		echo "</div>
 		 <div id='sidebar'>
 			<div style='width:200px;overflow:auto'>";
